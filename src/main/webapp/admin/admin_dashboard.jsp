@@ -80,7 +80,7 @@
                                         <span class="font-medium">System Overview</span>
                                     </div>
                                     <div
-                                        class="flex items-center gap-3 rounded-2xl border border-slate-300/70 bg-white/90 px-4 py-3 shadow-sm">
+                                        class="flex items-center gap-3  border border-slate-300/70 bg-white/90 px-4 py-3 shadow-sm">
                                         <div class="text-xs sm:text-sm">
                                             <p class="font-medium">
                                                 <%= u.getFullName() %>
@@ -98,7 +98,7 @@
 
                                 <!-- Total Customers -->
                                 <article
-                                    class="metric-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
+                                    class="metric-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6">
                                     <p class="text-[11px] font-medium text-slate-500 uppercase tracking-wide">Total
                                         Customers</p>
                                     <p class="text-3xl sm:text-4xl font-semibold mt-3 text-mono">
@@ -114,7 +114,7 @@
 
                                 <!-- Active Services -->
                                 <article
-                                    class="metric-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
+                                    class="metric-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6">
                                     <p class="text-[11px] font-medium text-slate-500 uppercase tracking-wide">Active
                                         Services</p>
                                     <p class="text-3xl sm:text-4xl font-semibold mt-3 text-mono">
@@ -130,7 +130,7 @@
 
                                 <!-- Feedback Entries -->
                                 <article
-                                    class="metric-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
+                                    class="metric-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6">
                                     <p class="text-[11px] font-medium text-slate-500 uppercase tracking-wide">Feedback
                                         Entries</p>
                                     <p class="text-3xl sm:text-4xl font-semibold mt-3 text-mono">
@@ -146,7 +146,7 @@
 
                                 <!-- New Users (30 days) -->
                                 <article
-                                    class="metric-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
+                                    class="metric-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6">
                                     <p class="text-[11px] font-medium text-slate-500 uppercase tracking-wide">New Users
                                         (30 Days)</p>
                                     <p class="text-3xl sm:text-4xl font-semibold mt-3 text-mono">
@@ -177,7 +177,7 @@
 
                                         <!-- Manage Services -->
                                         <a href="${pageContext.request.contextPath}/admin/services/list"
-                                            class="panel-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6 flex flex-col">
+                                            class="panel-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6 flex flex-col">
                                             <p class="text-[11px] text-slate-500 font-medium uppercase tracking-wide">
                                                 Services</p>
                                             <p class="text-base sm:text-lg font-semibold mt-3">Manage Services</p>
@@ -191,7 +191,7 @@
 
                                         <!-- Manage Customers -->
                                         <a href="${pageContext.request.contextPath}/admin/customers/list"
-                                            class="panel-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6 flex flex-col">
+                                            class="panel-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6 flex flex-col">
                                             <p class="text-[11px] text-slate-500 font-medium uppercase tracking-wide">
                                                 Customers</p>
                                             <p class="text-base sm:text-lg font-semibold mt-3">Manage Customers</p>
@@ -205,7 +205,7 @@
 
                                         <!-- Feedback -->
                                         <a href="${pageContext.request.contextPath}/admin/feedback"
-                                            class="panel-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6 flex flex-col">
+                                            class="panel-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6 flex flex-col">
                                             <p class="text-[11px] text-slate-500 font-medium uppercase tracking-wide">
                                                 Feedback</p>
                                             <p class="text-base sm:text-lg font-semibold mt-3">Review Feedback</p>
@@ -222,7 +222,7 @@
 
                                 <!-- RECENT FEEDBACK -->
                                 <aside
-                                    class="panel-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
+                                    class="panel-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6">
                                     <div class="flex items-center justify-between mb-3">
                                         <h2 class="text-lg font-semibold tracking-tight">Recent Feedback</h2>
                                         <a href="${pageContext.request.contextPath}/admin/feedback"
@@ -235,7 +235,7 @@
                                         <c:choose>
                                             <c:when test="${not empty recentFeedback}">
                                                 <c:forEach items="${recentFeedback}" var="fb">
-                                                    <div class="rounded-xl border border-slate-200 px-4 py-3 bg-white">
+                                                    <div class=" border border-slate-200 px-4 py-3 bg-white">
                                                         <p class="text-slate-500 mb-1">
                                                             ${fb.user_name} · ${fb.service_name}
                                                         </p>
@@ -266,7 +266,7 @@
 
                             <!-- SYSTEM OVERVIEW -->
                             <section
-                                class="panel-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
+                                class="panel-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6">
                                 <h2 class="text-lg font-semibold tracking-tight mb-3">System Overview</h2>
                                 <p class="text-xs text-slate-600 mb-4">
                                     High-level indicators to understand how the platform is being used before diving
@@ -323,7 +323,7 @@
 
                             <!-- SHORTCUTS -->
                             <section
-                                class="panel-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
+                                class="panel-card bg-white/90 border border-slate-200  px-5 py-5 sm:px-6 sm:py-6">
                                 <h2 class="text-lg font-semibold tracking-tight mb-3">Shortcuts</h2>
                                 <p class="text-xs text-slate-600 mb-4">
                                     Jump directly to frequent actions without navigating through multiple screens.
@@ -331,25 +331,25 @@
 
                                 <div class="space-y-3 text-xs">
                                     <a href="${pageContext.request.contextPath}/admin/services/create"
-                                        class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
+                                        class="flex items-center justify-between  border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
                                         <span>Add a new service</span>
                                         <span class="text-[11px] text-slate-500">Services · Add</span>
                                     </a>
 
                                     <a href="${pageContext.request.contextPath}/admin/services"
-                                        class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
+                                        class="flex items-center justify-between  border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
                                         <span>Review all services</span>
                                         <span class="text-[11px] text-slate-500">Services · List</span>
                                     </a>
 
                                     <a href="${pageContext.request.contextPath}/admin/customers"
-                                        class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
+                                        class="flex items-center justify-between  border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
                                         <span>View customer directory</span>
                                         <span class="text-[11px] text-slate-500">Customers</span>
                                     </a>
 
                                     <a href="${pageContext.request.contextPath}/admin/feedback"
-                                        class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
+                                        class="flex items-center justify-between  border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
                                         <span>Check latest feedback</span>
                                         <span class="text-[11px] text-slate-500">Feedback</span>
                                     </a>

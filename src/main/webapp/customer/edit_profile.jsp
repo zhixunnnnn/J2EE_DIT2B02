@@ -148,14 +148,14 @@
 
           <!-- Global error (profile update) -->
           <% if (errText !=null && !errText.trim().isEmpty()) { %>
-            <div class="mb-5 rounded-[18px] border border-rose-200 bg-rose-50/85
+            <div class="mb-5  border border-rose-200 bg-rose-50/85
                     px-4 py-2.5 text-[12.5px] text-rose-700">
               <%= errText %>
             </div>
             <% } %>
 
               <!-- Profile card -->
-              <section class="card-appear rounded-[24px] bg-[#fdfaf5]
+              <section class="card-appear  bg-[#fdfaf5]
                       border border-[#e0dcd4]
                       shadow-[0_14px_40px_rgba(15,23,42,0.10)]
                       px-6 py-6 md:px-8 md:py-7">
@@ -181,7 +181,7 @@
                         <label for="name" class="profile-label block text-[11px] uppercase text-slate-500">
                           Full name
                         </label>
-                        <input type="text" id="name" name="name" value="<%= u.getFullName() %>" class="w-full rounded-[14px]
+                        <input type="text" id="name" name="name" value="<%= u.getFullName() %>" class="w-full 
                               border border-[#ddd5c7]
                               bg-[#fbf7f1]
                               px-3 py-2.5 text-[13px]
@@ -196,7 +196,7 @@
                         <label for="email" class="profile-label block text-[11px] uppercase text-slate-500">
                           Email
                         </label>
-                        <input type="email" id="email" name="email" value="<%= u.getEmail() %>" class="w-full rounded-[14px]
+                        <input type="email" id="email" name="email" value="<%= u.getEmail() %>" class="w-full 
                               border border-[#ddd5c7]
                               bg-[#fbf7f1]
                               px-3 py-2.5 text-[13px]
@@ -214,7 +214,7 @@
                         <label for="phone" class="profile-label block text-[11px] uppercase text-slate-500">
                           Phone
                         </label>
-                        <input type="text" id="phone" name="Phone" value="<%= u.getPhone() %>" class="w-full rounded-[14px]
+                        <input type="text" id="phone" name="Phone" value="<%= u.getPhone() %>" class="w-full 
                               border border-[#ddd5c7]
                               bg-[#fbf7f1]
                               px-3 py-2.5 text-[13px]
@@ -263,7 +263,7 @@
                       <label for="street" class="profile-label block text-[11px] uppercase text-slate-500">
                         Street
                       </label>
-                      <input type="text" id="street" name="Street" value="<%= u.getStreet() %>" class="w-full rounded-[14px]
+                      <input type="text" id="street" name="Street" value="<%= u.getStreet() %>" class="w-full 
                             border border-[#ddd5c7]
                             bg-[#fbf7f1]
                             px-3 py-2.5 text-[13px]
@@ -280,7 +280,7 @@
                         <label for="postal_code" class="profile-label block text-[11px] uppercase text-slate-500">
                           Postal code
                         </label>
-                        <input type="text" id="postal_code" name="postal_code" value="<%= u.getPostalCode() %>" class="w-full rounded-[14px]
+                        <input type="text" id="postal_code" name="postal_code" value="<%= u.getPostalCode() %>" class="w-full 
                               border border-[#ddd5c7]
                               bg-[#fbf7f1]
                               px-3 py-2.5 text-[13px]
@@ -295,7 +295,7 @@
                         <label for="block_no" class="profile-label block text-[11px] uppercase text-slate-500">
                           Block no.
                         </label>
-                        <input type="text" id="block_no" name="block_no" value="<%= u.getBlockNo() %>" class="w-full rounded-[14px]
+                        <input type="text" id="block_no" name="block_no" value="<%= u.getBlockNo() %>" class="w-full 
                               border border-[#ddd5c7]
                               bg-[#fbf7f1]
                               px-3 py-2.5 text-[13px]
@@ -310,7 +310,7 @@
                         <label for="unit_no" class="profile-label block text-[11px] uppercase text-slate-500">
                           Unit no.
                         </label>
-                        <input type="text" id="unit_no" name="unit_no" value="<%= u.getUnitNo() %>" class="w-full rounded-[14px]
+                        <input type="text" id="unit_no" name="unit_no" value="<%= u.getUnitNo() %>" class="w-full 
                               border border-[#ddd5c7]
                               bg-[#fbf7f1]
                               px-3 py-2.5 text-[13px]
@@ -325,7 +325,7 @@
                     <!-- Save button -->
                     <div class="pt-2 flex justify-end">
                       <button type="submit" class="inline-flex items-center justify-center
-                             rounded-full bg-[#1e2a38] text-[#fdfaf5]
+                              bg-[#1e2a38] text-[#fdfaf5]
                              text-[14px] font-medium
                              px-5 py-3.5
                              shadow-[0_14px_36px_rgba(15,23,42,0.32)]
@@ -340,7 +340,7 @@
               </section>
 
               <!-- Security / change password card -->
-              <section class="mt-6 rounded-[22px] bg-[#fdfaf5]
+              <section class="mt-6  bg-[#fdfaf5]
                       border border-[#e0dcd4]
                       shadow-[0_10px_30px_rgba(15,23,42,0.08)]
                       px-6 py-6 md:px-8 md:py-7">
@@ -355,12 +355,12 @@
 
                 <!-- Password messages -->
                 <% if (pwdError !=null && !pwdError.trim().isEmpty()) { %>
-                  <div class="mb-4 rounded-[16px] border border-rose-200 bg-rose-50/90
+                  <div class="mb-4  border border-rose-200 bg-rose-50/90
                       px-4 py-2.5 text-[12.5px] text-rose-700">
                     <%= pwdError %>
                   </div>
                   <% } else if (pwdSuccess !=null && !pwdSuccess.trim().isEmpty()) { %>
-                    <div class="mb-4 rounded-[16px] border border-emerald-200 bg-emerald-50/90
+                    <div class="mb-4  border border-emerald-200 bg-emerald-50/90
                       px-4 py-2.5 text-[12.5px] text-emerald-800">
                       <%= pwdSuccess %>
                     </div>
@@ -374,7 +374,7 @@
                           <label for="oldPassword" class="profile-label block text-[11px] uppercase text-slate-500">
                             Current password
                           </label>
-                          <input type="password" id="oldPassword" name="oldPassword" class="w-full rounded-[14px]
+                          <input type="password" id="oldPassword" name="oldPassword" class="w-full 
                           border border-[#ddd5c7]
                           bg-[#fbf7f1]
                           px-3 py-2.5 text-[13px]
@@ -389,7 +389,7 @@
                           <label for="newPassword" class="profile-label block text-[11px] uppercase text-slate-500">
                             New password
                           </label>
-                          <input type="password" id="newPassword" name="newPassword" class="w-full rounded-[14px]
+                          <input type="password" id="newPassword" name="newPassword" class="w-full 
                           border border-[#ddd5c7]
                           bg-[#fbf7f1]
                           px-3 py-2.5 text-[13px]
@@ -404,7 +404,7 @@
                           <label for="confirmPassword" class="profile-label block text-[11px] uppercase text-slate-500">
                             Confirm new password
                           </label>
-                          <input type="password" id="confirmPassword" name="confirmPassword" class="w-full rounded-[14px]
+                          <input type="password" id="confirmPassword" name="confirmPassword" class="w-full 
                           border border-[#ddd5c7]
                           bg-[#fbf7f1]
                           px-3 py-2.5 text-[13px]
@@ -417,7 +417,7 @@
 
                         <div class="pt-1 flex justify-start">
                           <button type="submit" class="inline-flex items-center justify-center
-                           rounded-full bg-[#1e2a38] text-[#fdfaf5]
+                            bg-[#1e2a38] text-[#fdfaf5]
                            text-[13px] font-medium
                            px-5 py-2.5
                            shadow-[0_12px_30px_rgba(15,23,42,0.28)]
@@ -431,7 +431,7 @@
               </section>
 
               <!-- Danger zone: delete account -->
-              <section class="mt-6 rounded-[20px] border border-[#ecd9d6] bg-[#fdf4f3] px-6 py-4 md:px-7 md:py-5">
+              <section class="mt-6  border border-[#ecd9d6] bg-[#fdf4f3] px-6 py-4 md:px-7 md:py-5">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                   <div>
                     <h3 class="text-[14px] font-semibold text-[#7f1d1d]">
@@ -444,7 +444,7 @@
                   </div>
                   <form method="get" action="<%= request.getContextPath() %>/profile/delete">
                     <button type="submit" class="inline-flex items-center justify-center
-                           rounded-full border border-[#fca5a5]
+                            border border-[#fca5a5]
                            bg-[#fee2e2]
                            px-4 py-2.5 text-[13px] font-medium text-[#991b1b]
                            hover:bg-[#fecaca]

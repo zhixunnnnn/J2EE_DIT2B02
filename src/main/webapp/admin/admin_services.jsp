@@ -121,7 +121,7 @@
                                         ← Back to dashboard
                                     </a>
                                     <button id="openAddPanelBtn"
-                                        class="primary-btn bg-slate-900 text-white rounded-xl px-4 py-2.5 text-xs sm:text-sm font-medium flex items-center gap-2">
+                                        class="primary-btn bg-slate-900 text-white  px-4 py-2.5 text-xs sm:text-sm font-medium flex items-center gap-2">
                                         <span class="inline-block text-lg leading-none">＋</span>
                                         <span>Add service</span>
                                     </button>
@@ -130,7 +130,7 @@
 
                             <!-- TABLE WRAPPER -->
                             <section id="servicesTableSection"
-                                class="table-card bg-white/90 border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                                class="table-card bg-white/90 border border-slate-200  shadow-sm overflow-hidden">
 
                                 <!-- Toolbar -->
                                 <div
@@ -149,7 +149,7 @@
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <input type="text" id="serviceSearch" placeholder="Search by name..."
-                                            class="w-full sm:w-56 px-3 py-2 rounded-lg border border-slate-200 text-xs sm:text-sm bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 focus:border-slate-400" />
+                                            class="w-full sm:w-56 px-3 py-2  border border-slate-200 text-xs sm:text-sm bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 focus:border-slate-400" />
                                     </div>
                                 </div>
 
@@ -211,12 +211,12 @@
                                                     <td class="px-6 py-3 text-right align-middle">
                                                         <div class="inline-flex items-center gap-2">
                                                             <button type="button"
-                                                                class="edit-btn text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
+                                                                class="edit-btn text-xs px-2.5 py-1.5  border border-slate-200 bg-white hover:bg-slate-50"
                                                                 data-id="${svc.serviceId}">
                                                                 Edit
                                                             </button>
                                                             <button type="button"
-                                                                class="delete-btn text-xs px-2.5 py-1.5 rounded-lg border border-red-200 text-red-600 bg-white hover:bg-red-50"
+                                                                class="delete-btn text-xs px-2.5 py-1.5  border border-red-200 text-red-600 bg-white hover:bg-red-50"
                                                                 data-id="${svc.serviceId}">
                                                                 Delete
                                                             </button>
@@ -266,12 +266,12 @@
                                             </div>
                                             <div class="flex justify-end gap-2 pt-1">
                                                 <button type="button"
-                                                    class="edit-btn text-[11px] px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white"
+                                                    class="edit-btn text-[11px] px-2.5 py-1.5  border border-slate-200 bg-white"
                                                     data-id="${svc.serviceId}">
                                                     Edit
                                                 </button>
                                                 <button type="button"
-                                                    class="delete-btn text-[11px] px-2.5 py-1.5 rounded-lg border border-red-200 text-red-600 bg-white"
+                                                    class="delete-btn text-[11px] px-2.5 py-1.5  border border-red-200 text-red-600 bg-white"
                                                     data-id="${svc.serviceId}">
                                                     Delete
                                                 </button>
@@ -312,13 +312,13 @@
                                     <div>
                                         <label class="block mb-1 text-slate-700">Service name</label>
                                         <input type="text" name="service_name"
-                                            class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
+                                            class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 text-slate-700">Category</label>
                                         <select name="category_id"
-                                            class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50">
+                                            class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50">
                                             <c:forEach items="${categoryList}" var="cat">
                                                 <option value="${cat.categoryId}">${cat.categoryName}</option>
                                             </c:forEach>
@@ -329,36 +329,36 @@
                                         <div>
                                             <label class="block mb-1 text-slate-700">Price (SGD)</label>
                                             <input type="number" step="0.01" min="0" name="price"
-                                                class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
+                                                class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
                                         </div>
                                         <div>
                                             <label class="block mb-1 text-slate-700">Duration (min)</label>
                                             <input type="number" min="0" name="duration_min"
-                                                class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
+                                                class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
                                         </div>
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 text-slate-700">Image path</label>
                                         <input type="text" name="image_path"
-                                            class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50"
+                                            class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50"
                                             placeholder="e.g. images/services/homecare.jpg" />
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 text-slate-700">Description</label>
                                         <textarea name="description" rows="3"
-                                            class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 resize-none"></textarea>
+                                            class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 resize-none"></textarea>
                                     </div>
                                 </div>
 
                                 <div class="mt-6 flex items-center justify-end gap-3 text-xs sm:text-sm">
                                     <button type="button" id="cancelAddBtn"
-                                        class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:bg-slate-50">
+                                        class="px-3 py-2  border border-slate-200 text-slate-700 bg-white hover:bg-slate-50">
                                         Cancel
                                     </button>
                                     <button type="submit"
-                                        class="primary-btn px-4 py-2 rounded-lg bg-slate-900 text-white font-medium">
+                                        class="primary-btn px-4 py-2  bg-slate-900 text-white font-medium">
                                         Save service
                                     </button>
                                 </div>
@@ -370,7 +370,7 @@
                     <div id="editModalBackdrop"
                         class="backdrop fixed inset-0 z-[210] opacity-0 invisible flex items-center justify-center">
                         <div id="editModal"
-                            class="panel w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200 px-6 py-6 sm:px-7 sm:py-7 transform translate-y-6"
+                            class="panel w-full max-w-lg bg-white  shadow-2xl border border-slate-200 px-6 py-6 sm:px-7 sm:py-7 transform translate-y-6"
                             style="max-height: calc(100vh - 120px); overflow-y: auto;">
                             <div class="flex items-center justify-between mb-2">
                                 <h2 class="text-lg font-semibold">Edit service</h2>
@@ -391,13 +391,13 @@
                                     <div>
                                         <label class="block mb-1 text-slate-700">Service name</label>
                                         <input type="text" name="service_name" id="edit_service_name"
-                                            class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
+                                            class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 text-slate-700">Category</label>
                                         <select name="category_id" id="edit_category_id"
-                                            class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50">
+                                            class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50">
                                             <c:forEach items="${categoryList}" var="cat">
                                                 <option value="${cat.categoryId}">${cat.categoryName}</option>
                                             </c:forEach>
@@ -408,35 +408,35 @@
                                         <div>
                                             <label class="block mb-1 text-slate-700">Price (SGD)</label>
                                             <input type="number" step="0.01" min="0" name="price" id="edit_price"
-                                                class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
+                                                class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
                                         </div>
                                         <div>
                                             <label class="block mb-1 text-slate-700">Duration (min)</label>
                                             <input type="number" min="0" name="duration_min" id="edit_duration"
-                                                class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
+                                                class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
                                         </div>
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 text-slate-700">Image path</label>
                                         <input type="text" name="image_path" id="edit_image"
-                                            class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
+                                            class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50" />
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 text-slate-700">Description</label>
                                         <textarea name="description" id="edit_description" rows="3"
-                                            class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 resize-none"></textarea>
+                                            class="w-full px-3 py-2  border border-slate-200 bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 resize-none"></textarea>
                                     </div>
                                 </div>
 
                                 <div class="mt-6 flex items-center justify-end gap-3 text-xs sm:text-sm">
                                     <button type="button" id="cancelEditBtn"
-                                        class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:bg-slate-50">
+                                        class="px-3 py-2  border border-slate-200 text-slate-700 bg-white hover:bg-slate-50">
                                         Cancel
                                     </button>
                                     <button type="submit"
-                                        class="primary-btn px-4 py-2 rounded-lg bg-slate-900 text-white font-medium">
+                                        class="primary-btn px-4 py-2  bg-slate-900 text-white font-medium">
                                         Save changes
                                     </button>
                                 </div>
@@ -448,7 +448,7 @@
                     <div id="deleteModalBackdrop"
                         class="backdrop fixed inset-0 z-[210] opacity-0 invisible flex items-center justify-center">
                         <div id="deleteModal"
-                            class="panel w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-slate-200 px-6 py-6 sm:px-7 sm:py-7 transform translate-y-6"
+                            class="panel w-full max-w-sm bg-white  shadow-2xl border border-slate-200 px-6 py-6 sm:px-7 sm:py-7 transform translate-y-6"
                             style="max-height: calc(100vh - 120px); overflow-y: auto;">
                             <h2 class="text-lg font-semibold mb-2">Delete service</h2>
                             <p class="text-xs text-slate-600 mb-4">
@@ -462,11 +462,11 @@
 
                                 <div class="flex items-center justify-end gap-3 text-xs sm:text-sm">
                                     <button type="button" id="cancelDeleteBtn"
-                                        class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:bg-slate-50">
+                                        class="px-3 py-2  border border-slate-200 text-slate-700 bg-white hover:bg-slate-50">
                                         Cancel
                                     </button>
                                     <button type="submit"
-                                        class="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700">
+                                        class="px-4 py-2  bg-red-600 text-white font-medium hover:bg-red-700">
                                         Delete
                                     </button>
                                 </div>

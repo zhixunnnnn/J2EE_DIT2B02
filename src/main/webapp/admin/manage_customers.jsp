@@ -81,7 +81,7 @@
 
 								<!-- TABLE WRAPPER -->
 								<section
-									class="table-card bg-white/90 border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+									class="table-card bg-white/90 border border-slate-200  shadow-sm overflow-hidden">
 									<!-- Toolbar -->
 									<div
 										class="px-4 sm:px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -100,7 +100,7 @@
 										<div class="flex items-center gap-2">
 											<input type="text" id="customerSearch"
 												placeholder="Search by name or email..."
-												class="w-full sm:w-64 px-3 py-2 rounded-lg border border-slate-200 text-xs sm:text-sm bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 focus:border-slate-400" />
+												class="w-full sm:w-64 px-3 py-2  border border-slate-200 text-xs sm:text-sm bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 focus:border-slate-400" />
 										</div>
 									</div>
 
@@ -171,11 +171,11 @@
 															<c:choose>
 																<c:when test="${not empty cust.countryName}">
 																	<div
-																		class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200">
+																		class="inline-flex items-center gap-2 px-3 py-1.5  bg-slate-50 border border-slate-200">
 																		<c:if test="${not empty cust.flagImage}">
 																			<img src="${pageContext.request.contextPath}/images/flags/${cust.flagImage}"
 																				alt="${cust.countryName}"
-																				class="w-5 h-5 rounded-full object-cover" />
+																				class="w-5 h-5  object-cover" />
 																		</c:if>
 																		<span
 																			class="text-xs text-slate-700">${cust.countryName}</span>
@@ -198,7 +198,7 @@
 														<!-- ACTIONS -->
 														<td class="w-[6%] px-6 py-4 align-middle text-right">
 															<button type="button"
-																class="open-delete-modal text-xs px-3 py-1.5 rounded-full border border-red-200 text-red-600 bg-white hover:bg-red-50"
+																class="open-delete-modal text-xs px-3 py-1.5  border border-red-200 text-red-600 bg-white hover:bg-red-50"
 																data-id="${cust.user_id}" data-name="${cust.name}"
 																data-email="${cust.email}">
 																Delete
@@ -228,7 +228,7 @@
 																<c:if test="${not empty cust.flagImage}">
 																	<img src="${pageContext.request.contextPath}/images/flags/${cust.flagImage}"
 																		alt="${cust.countryName}"
-																		class="w-4 h-4 rounded-full object-cover" />
+																		class="w-4 h-4  object-cover" />
 																</c:if>
 																<span>${cust.countryName}</span>
 															</c:when>
@@ -244,7 +244,7 @@
 												</div>
 												<div class="flex justify-end pt-2">
 													<button type="button"
-														class="open-delete-modal text-[11px] px-2.5 py-1.5 rounded-lg border border-red-200 text-red-600 bg-white hover:bg-red-50"
+														class="open-delete-modal text-[11px] px-2.5 py-1.5  border border-red-200 text-red-600 bg-white hover:bg-red-50"
 														data-id="${cust.user_id}" data-name="${cust.name}"
 														data-email="${cust.email}">
 														Delete
@@ -267,7 +267,7 @@
 						<div id="deleteModalBackdrop" class="fixed inset-0 z-[220] bg-black/30 backdrop-blur-sm
 	            flex items-center justify-center
 	            opacity-0 invisible transition-opacity duration-200">
-							<div id="deleteModal" class="w-full max-w-md mx-4 rounded-2xl bg-[#fdfaf5]
+							<div id="deleteModal" class="w-full max-w-md mx-4  bg-[#fdfaf5]
 	              border border-[#ecd9d6]
 	              shadow-[0_18px_50px_rgba(15,23,42,0.30)]
 	              px-6 py-6 sm:px-7 sm:py-7
@@ -284,7 +284,7 @@
 								</p>
 
 								<!-- Customer summary -->
-								<div class="mt-4 rounded-xl border border-[#e5d5d2] bg-white px-4 py-3">
+								<div class="mt-4  border border-[#e5d5d2] bg-white px-4 py-3">
 									<p class="text-[13px] font-medium text-[#1e2a38]" id="deleteCustomerName">
 										Customer name
 									</p>
@@ -302,13 +302,13 @@
 									class="mt-6 flex items-center justify-end gap-3 text-xs sm:text-sm">
 									<input type="hidden" name="user_id" id="deleteUserId" />
 
-									<button type="button" id="cancelDeleteBtn" class="px-3 py-2 rounded-full border border-slate-200
+									<button type="button" id="cancelDeleteBtn" class="px-3 py-2  border border-slate-200
 	                     text-slate-700 bg-white hover:bg-slate-50
 	                     transition-colors duration-150">
 										Cancel
 									</button>
 
-									<button type="submit" class="px-4 py-2 rounded-full bg-red-600 text-white font-medium
+									<button type="submit" class="px-4 py-2  bg-red-600 text-white font-medium
 	                     shadow-[0_12px_30px_rgba(220,38,38,0.45)]
 	                     hover:bg-red-700 active:scale-[0.98]
 	                     transition-all duration-170">

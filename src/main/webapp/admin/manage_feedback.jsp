@@ -70,7 +70,7 @@
 
                                 <!-- TABLE CARD -->
                                 <section
-                                    class="table-card bg-white/90 border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                                    class="table-card bg-white/90 border border-slate-200  shadow-sm overflow-hidden">
                                     <!-- Toolbar -->
                                     <div
                                         class="px-4 sm:px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -90,7 +90,7 @@
                                         <div class="flex items-center gap-2">
                                             <input type="text" id="feedbackSearch"
                                                 placeholder="Search by service, user or comment..."
-                                                class="w-full sm:w-72 px-3 py-2 rounded-lg border border-slate-200 text-xs sm:text-sm bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 focus:border-slate-400" />
+                                                class="w-full sm:w-72 px-3 py-2  border border-slate-200 text-xs sm:text-sm bg-[#f9f7f3] focus:outline-none focus:ring-2 focus:ring-slate-400/50 focus:border-slate-400" />
                                         </div>
                                     </div>
 
@@ -152,7 +152,7 @@
                                                                 <input type="hidden" name="feedback_id"
                                                                     value="${fb.feedbackId}" />
                                                                 <button type="submit"
-                                                                    class="text-[11px] px-3 py-1.5 rounded-full border border-red-200 text-red-600 bg-white hover:bg-red-50">
+                                                                    class="text-[11px] px-3 py-1.5  border border-red-200 text-red-600 bg-white hover:bg-red-50">
                                                                     Delete
                                                                 </button>
                                                             </form>
@@ -199,7 +199,7 @@
                                                         <input type="hidden" name="feedback_id"
                                                             value="${fb.feedbackId}" />
                                                         <button type="submit"
-                                                            class="text-[11px] px-3 py-1.5 rounded-full border border-red-200 text-red-600 bg-white hover:bg-red-50">
+                                                            class="text-[11px] px-3 py-1.5  border border-red-200 text-red-600 bg-white hover:bg-red-50">
                                                             Delete
                                                         </button>
                                                     </form>
