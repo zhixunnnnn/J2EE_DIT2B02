@@ -80,9 +80,9 @@ public class CustomerListServlet extends HttpServlet {
             session.setAttribute("sessName", user.getName());
             session.setAttribute("sessRole", user.getUserRole());
 
-            response.sendRedirect(request.getContextPath() + "/customer/profile.jsp");
+            response.sendRedirect(request.getContextPath() + "/profile");
         } else {
-            response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=invalidLogin");
+            response.sendRedirect(request.getContextPath() + "/login?errCode=invalidLogin");
         }
     }
 
@@ -108,9 +108,9 @@ public class CustomerListServlet extends HttpServlet {
         Integer result = ApiClient.post("/customers/register", c, Integer.class);
 
         if (result != null && result > 0) {
-            response.sendRedirect(request.getContextPath() + "/public/login.jsp?msgCode=RegisterSuccess");
+            response.sendRedirect(request.getContextPath() + "/login?msgCode=RegisterSuccess");
         } else {
-            response.sendRedirect(request.getContextPath() + "/public/register.jsp?errCode=RegisterFail");
+            response.sendRedirect(request.getContextPath() + "/register?errCode=RegisterFail");
         }
     }
 
@@ -119,7 +119,7 @@ public class CustomerListServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("sessId") == null) {
-            response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=NoSession");
+            response.sendRedirect(request.getContextPath() + "/login?errCode=NoSession");
             return;
         }
 
@@ -129,9 +129,9 @@ public class CustomerListServlet extends HttpServlet {
 
         if (user != null) {
             session.setAttribute("user", user);
-            response.sendRedirect(request.getContextPath() + "/customer/profile.jsp");
+            response.sendRedirect(request.getContextPath() + "/profile");
         } else {
-            response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=UserNotFound");
+            response.sendRedirect(request.getContextPath() + "/login?errCode=UserNotFound");
         }
     }
 
@@ -157,7 +157,7 @@ public class CustomerListServlet extends HttpServlet {
         if (status == 200) {
             response.sendRedirect(request.getContextPath() + "/customersServlet?action=retrieveUser&msg=updated");
         } else {
-            response.sendRedirect(request.getContextPath() + "/customer/profile.jsp?errCode=UpdateFailed");
+            response.sendRedirect(request.getContextPath() + "/profile?errCode=UpdateFailed");
         }
     }
 
@@ -173,9 +173,9 @@ public class CustomerListServlet extends HttpServlet {
         int status = ApiClient.put("/customers/" + userId + "/password", pr);
 
         if (status == 200) {
-            response.sendRedirect(request.getContextPath() + "/customer/edit_profile.jsp?success=PasswordUpdated");
+            response.sendRedirect(request.getContextPath() + "/profile/edit?success=PasswordUpdated");
         } else {
-            response.sendRedirect(request.getContextPath() + "/customer/edit_profile.jsp?error=PasswordUpdateFailed");
+            response.sendRedirect(request.getContextPath() + "/profile/edit?error=PasswordUpdateFailed");
         }
     }
 
@@ -189,9 +189,9 @@ public class CustomerListServlet extends HttpServlet {
 
         if (status == 200) {
             session.invalidate();
-            response.sendRedirect(request.getContextPath() + "/account_deleted.jsp");
+            response.sendRedirect(request.getContextPath() + "/login?msg=AccountDeleted");
         } else {
-            response.sendRedirect(request.getContextPath() + "/customer/profile.jsp?errCode=DeleteFailed");
+            response.sendRedirect(request.getContextPath() + "/profile?errCode=DeleteFailed");
         }
     }
 
@@ -201,6 +201,6 @@ public class CustomerListServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
 
-        response.sendRedirect(request.getContextPath() + "/public/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/login");
     }
 }

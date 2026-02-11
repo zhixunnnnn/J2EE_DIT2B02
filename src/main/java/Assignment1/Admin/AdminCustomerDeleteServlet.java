@@ -26,7 +26,7 @@ public class AdminCustomerDeleteServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		Object role = (session != null) ? session.getAttribute("sessRole") : null;
 		if (role == null || !"admin".equals(role.toString())) {
-			response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=NoAdmin");
+			response.sendRedirect(request.getContextPath() + "/login?errCode=NoAdmin");
 			return;
 		}
 

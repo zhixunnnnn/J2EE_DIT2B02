@@ -40,7 +40,7 @@ public class AdminCustomerListServlet extends HttpServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendRedirect(request.getContextPath() + "/admin/manage_customers.jsp?errCode=API_ERROR");
+			response.sendRedirect(request.getContextPath() + "/admin/customers?errCode=API_ERROR");
 		}
 	}
 

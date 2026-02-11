@@ -22,6 +22,6 @@ public class CartClearServlet extends HttpServlet {
 			session.removeAttribute("cart");
 		}
 
-		response.sendRedirect(request.getContextPath() + "/customer/cart.jsp");
+		response.sendRedirect(request.getContextPath() + "/cart");
 	}
 }

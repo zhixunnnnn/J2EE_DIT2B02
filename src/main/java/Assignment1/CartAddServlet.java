@@ -78,7 +78,7 @@ public class CartAddServlet extends HttpServlet {
 			}
 
 			// 4) Redirect to cart page
-			response.sendRedirect(request.getContextPath() + "/customer/cart.jsp");
+			response.sendRedirect(request.getContextPath() + "/cart");
 
 		} catch (Exception e) {
 			throw new ServletException("Error adding item to cart", e);

@@ -58,7 +58,7 @@ public class AdminDashboardServlet extends HttpServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendRedirect(request.getContextPath() + "/error.jsp?err=dashboard");
+			response.sendRedirect(request.getContextPath() + "/?err=dashboard");
 		}
 	}
 }

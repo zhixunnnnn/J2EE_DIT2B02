@@ -43,12 +43,12 @@ public class AdminServiceCreateServlet extends HttpServlet {
 			if (status == 200 || status == 201) {
 				response.sendRedirect(request.getContextPath() + "/admin/services/list");
 			} else {
-				response.sendRedirect(request.getContextPath() + "/admin/adminAddService.jsp?errCode=CreateFailed");
+				response.sendRedirect(request.getContextPath() + "/admin/services?errCode=CreateFailed");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendRedirect(request.getContextPath() + "/admin/adminAddService.jsp?errCode=API_ERROR");
+			response.sendRedirect(request.getContextPath() + "/admin/services?errCode=API_ERROR");
 		}
 	}
 }

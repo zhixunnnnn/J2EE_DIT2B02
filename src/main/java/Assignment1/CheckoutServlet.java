@@ -33,7 +33,7 @@ public class CheckoutServlet extends HttpServlet {
 		// 1) Session / role checks
 		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("sessId") == null) {
-			response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=NoSession");
+			response.sendRedirect(request.getContextPath() + "/login?errCode=NoSession");
 			return;
 		}
 
@@ -41,26 +41,26 @@ public class CheckoutServlet extends HttpServlet {
 		try {
 			userId = UUID.fromString(session.getAttribute("sessId").toString());
 		} catch (Exception e) {
-			response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=InvalidSession");
+			response.sendRedirect(request.getContextPath() + "/login?errCode=InvalidSession");
 			return;
 		}
 
 		String userRole = String.valueOf(session.getAttribute("sessRole"));
 		if (!"customer".equalsIgnoreCase(userRole)) {
-			response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=NotCustomer");
+			response.sendRedirect(request.getContextPath() + "/login?errCode=NotCustomer");
 			return;
 		}
 
 		// 2) Cart + form data
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 		if (cart == null || cart.isEmpty()) {
-			response.sendRedirect(request.getContextPath() + "/customer/cart.jsp?errCode=EmptyCart");
+			response.sendRedirect(request.getContextPath() + "/cart?errCode=EmptyCart");
 			return;
 		}
 
 		String serviceDateStr = request.getParameter("service_date");
 		if (serviceDateStr == null || serviceDateStr.isBlank()) {
-			response.sendRedirect(request.getContextPath() + "/customer/cart.jsp?errCode=DateNull");
+			response.sendRedirect(request.getContextPath() + "/cart?errCode=DateNull");
 			return;
 		}
 
@@ -103,12 +103,12 @@ public class CheckoutServlet extends HttpServlet {
 				session.removeAttribute("cart");
 				response.sendRedirect(request.getContextPath() + "/customer/bookings");
 			} else {
-				response.sendRedirect(request.getContextPath() + "/customer/cart.jsp?errCode=CheckoutFailed");
+				response.sendRedirect(request.getContextPath() + "/cart?errCode=CheckoutFailed");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendRedirect(request.getContextPath() + "/customer/cart.jsp?errCode=CheckoutError");
+			response.sendRedirect(request.getContextPath() + "/cart?errCode=CheckoutError");
 		}
 	}
 }

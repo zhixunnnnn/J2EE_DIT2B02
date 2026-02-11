@@ -21,13 +21,13 @@ public class CartUpdateServlet extends HttpServlet {
 
 		HttpSession session = request.getSession(false);
 		if (session == null) {
-			response.sendRedirect(request.getContextPath() + "/cart.jsp");
+			response.sendRedirect(request.getContextPath() + "/cart");
 			return;
 		}
 
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 		if (cart == null) {
-			response.sendRedirect(request.getContextPath() + "/cart.jsp");
+			response.sendRedirect(request.getContextPath() + "/cart");
 			return;
 		}
 
@@ -52,10 +52,10 @@ public class CartUpdateServlet extends HttpServlet {
 				}
 			}
 
-			response.sendRedirect(request.getContextPath() + "/customer/cart.jsp");
+			response.sendRedirect(request.getContextPath() + "/cart");
 		} catch (NumberFormatException e) {
 			// Ignore bad input, just redirect back
-			response.sendRedirect(request.getContextPath() + "/customer/cart.jsp");
+			response.sendRedirect(request.getContextPath() + "/cart");
 		}
 	}
 }

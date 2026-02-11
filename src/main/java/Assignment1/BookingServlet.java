@@ -29,7 +29,7 @@ public class BookingServlet extends HttpServlet {
 
 		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("sessId") == null) {
-			response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=NoSession");
+			response.sendRedirect(request.getContextPath() + "/login?errCode=NoSession");
 			return;
 		}
 

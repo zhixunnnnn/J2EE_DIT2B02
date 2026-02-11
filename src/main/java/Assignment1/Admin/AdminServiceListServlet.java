@@ -50,7 +50,7 @@ public class AdminServiceListServlet extends HttpServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendRedirect(request.getContextPath() + "/admin/admin_services.jsp?errCode=API_ERROR");
+			response.sendRedirect(request.getContextPath() + "/admin/services?errCode=API_ERROR");
 		}
 	}
 

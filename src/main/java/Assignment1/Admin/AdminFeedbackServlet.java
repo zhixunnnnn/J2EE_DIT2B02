@@ -32,7 +32,7 @@ public class AdminFeedbackServlet extends HttpServlet {
 		HttpSession sess = request.getSession(false);
 		if (sess == null || sess.getAttribute("sessRole") == null
 				|| !"admin".equals(sess.getAttribute("sessRole").toString())) {
-			response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=NoSession");
+			response.sendRedirect(request.getContextPath() + "/login?errCode=NoSession");
 			return;
 		}
 

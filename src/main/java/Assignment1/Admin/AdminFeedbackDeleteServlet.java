@@ -30,7 +30,7 @@ public class AdminFeedbackDeleteServlet extends HttpServlet {
 		if (session == null || session.getAttribute("sessRole") == null
 				|| !"admin".equals(session.getAttribute("sessRole"))) {
 
-			response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=NoSession");
+			response.sendRedirect(request.getContextPath() + "/login?errCode=NoSession");
 			return;
 		}
 
