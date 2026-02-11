@@ -17,7 +17,7 @@
         return;
         }
         if (countryList == null) {
-        response.sendRedirect(request.getContextPath() + "/countryCodeServlet?origin=customer/edit_profile.jsp");
+        response.sendRedirect(request.getContextPath() + "/countryCodeServlet?origin=profile/edit");
         return;
         }
 
@@ -442,7 +442,7 @@
                       This action cannot be undone.
                     </p>
                   </div>
-                  <form method="get" action="<%= request.getContextPath() %>/customer/delete_profile.jsp">
+                  <form method="get" action="<%= request.getContextPath() %>/profile/delete">
                     <button type="submit" class="inline-flex items-center justify-center
                            rounded-full border border-[#fca5a5]
                            bg-[#fee2e2]

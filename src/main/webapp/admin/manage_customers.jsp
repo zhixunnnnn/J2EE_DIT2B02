@@ -11,9 +11,9 @@
 					<title>Manage Customers | SilverCare Admin</title>
 
 					<% Object userRole=session.getAttribute("sessRole"); if (userRole==null) {
-						response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=NoSession" );
+						response.sendRedirect(request.getContextPath() + "/login?errCode=NoSession" );
 						return; } else { String userRoleString=userRole.toString(); if (!"admin".equals(userRoleString))
-						{ response.sendRedirect(request.getContextPath() + "/index.jsp" ); return; } } %>
+						{ response.sendRedirect(request.getContextPath() + "/" ); return; } } %>
 
 						<!-- Tailwind via CDN -->
 						<script src="https://cdn.tailwindcss.com"></script>

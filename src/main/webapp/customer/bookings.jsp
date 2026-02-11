@@ -4,7 +4,7 @@
       <%@ page import="Assignment1.BookingDetail" %>
 
         <% Object userRole=session.getAttribute("sessRole"); if (userRole==null) {
-          response.sendRedirect(request.getContextPath() + "/public/login.jsp?errCode=NoSession" ); return; } //
+          response.sendRedirect(request.getContextPath() + "/login?errCode=NoSession" ); return; } //
           bookings are now passed on the *request* by BookingServlet @SuppressWarnings("unchecked") ArrayList<Booking>
           bookings = (ArrayList<Booking>) request.getAttribute("bookings");
             if (bookings == null) {
@@ -92,7 +92,7 @@
                             Once you book a SilverCare service, it will appear here with full details,
                             including date, status and services booked.
                           </p>
-                          <a href="<%= request.getContextPath() %>/public/services.jsp" class="inline-flex items-center justify-center
+                          <a href="<%= request.getContextPath() %>/services" class="inline-flex items-center justify-center
                     rounded-full bg-[#1e2a38] text-[#fdfaf5]
                     text-[14px] font-medium
                     px-5 py-3

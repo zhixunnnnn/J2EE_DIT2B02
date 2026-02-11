@@ -28,7 +28,7 @@
                         <br /><br />
 
                         <button type="submit">Confirm Delete</button>
-                        <a href="<%= request.getContextPath() %>/customer/edit_profile.jsp">Cancel</a>
+                        <a href="<%= request.getContextPath() %>/profile/edit">Cancel</a>
                     </form>
 
                     <%@ include file="../includes/footer.jsp" %>

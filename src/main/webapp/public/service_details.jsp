@@ -15,7 +15,7 @@
         // Pull request attributes (set by servlet)
         Service s = (Service) request.getAttribute("service");
         if (s == null) {
-            response.sendRedirect(request.getContextPath() + "/public/services.jsp?errCode=ServiceNotFoundWithChanges");
+            response.sendRedirect(request.getContextPath() + "/services?errCode=ServiceNotFoundWithChanges");
             return;
         }
 
@@ -48,7 +48,7 @@
 
         <!-- BACK LINK -->
         <div>
-            <a href="<%= request.getContextPath() %>/public/services.jsp"
+            <a href="<%= request.getContextPath() %>/services"
                class="inline-flex items-center gap-1 text-xs sm:text-sm text-slate-600 hover:text-slate-900">
                 ← Back to services
             </a>
@@ -121,7 +121,7 @@
                             </button>
                         </form>
 
-                        <a href="<%= request.getContextPath() %>/public/services.jsp"
+                        <a href="<%= request.getContextPath() %>/services"
                            class="flex-1 inline-flex items-center justify-center px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm text-slate-800 hover:bg-slate-50 transition-colors">
                             Back to services
                         </a>

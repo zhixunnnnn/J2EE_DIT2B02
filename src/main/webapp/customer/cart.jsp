@@ -18,7 +18,7 @@
             }
         </style>
         <% Object userRole=session.getAttribute("sessRole"); if(userRole==null){
-            response.sendRedirect(request.getContextPath()+"/public/login.jsp?errCode=NoSession"); } %>
+            response.sendRedirect(request.getContextPath()+"/login?errCode=NoSession"); } %>
     </head>
 
     <body class="bg-[#f7f4ef] text-slate-900 min-h-screen">
@@ -64,7 +64,7 @@
                                         your cart
                                         to start a booking.
                                     </p>
-                                    <a href="<%=request.getContextPath()%>/services.jsp" class="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-sm font-medium
+                                    <a href="<%=request.getContextPath()%>/services" class="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-sm font-medium
                           bg-emerald-500 text-white hover:bg-emerald-600 transition">
                                         Browse Services
                                     </a>
@@ -149,7 +149,7 @@
                                                     Clear Cart
                                                 </button>
                                             </form>
-                                            <a href="<%=request.getContextPath()%>/services.jsp"
+                                            <a href="<%=request.getContextPath()%>/services"
                                                 class="inline-flex items-center px-4 py-2 rounded-full border border-slate-200 text-slate-600 text-xs md:text-sm font-medium hover:bg-slate-50 transition">
                                                 Continue Browsing
                                             </a>

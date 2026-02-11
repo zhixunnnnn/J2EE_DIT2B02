@@ -18,10 +18,10 @@
       <div>
         <h4 class="text-[#1e2a38] font-semibold mb-4">Navigation</h4>
         <ul class="space-y-2 text-sm">
-          <li><a href="index.jsp" class="footer-link">Home</a></li>
-          <li><a href="services.jsp" class="footer-link">Services</a></li>
-          <li><a href="register_client.jsp" class="footer-link">Register</a></li>
-          <li><a href="login.jsp" class="footer-link">Login</a></li>
+          <li><a href="<%=request.getContextPath()%>/" class="footer-link">Home</a></li>
+          <li><a href="<%=request.getContextPath()%>/services" class="footer-link">Services</a></li>
+          <li><a href="<%=request.getContextPath()%>/register" class="footer-link">Register</a></li>
+          <li><a href="<%=request.getContextPath()%>/login" class="footer-link">Login</a></li>
         </ul>
       </div>
 

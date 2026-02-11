@@ -3,235 +3,258 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SilverCare | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SilverCare</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Cormorant', 'Georgia', 'serif'],
+            sans: ['Outfit', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            stone: {
+              warm: '#f5f3ef',
+              mid: '#e8e4dc',
+              deep: '#d4cec3',
+            },
+            ink: {
+              DEFAULT: '#2c2c2c',
+              light: '#5a5a5a',
+              muted: '#8a8a8a',
+            },
+            copper: {
+              DEFAULT: '#b87a4b',
+              light: '#d4a574',
+            },
+            forest: '#3d4f3d',
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    @keyframes softFadeUp { 0% {opacity:0; transform:translateY(20px);} 100% {opacity:1; transform:translateY(0);} }
-    @keyframes softFade { 0% {opacity:0;} 100% {opacity:1;} }
-
-    .reveal-up{ opacity:0; animation:softFadeUp 1.2s ease-out forwards; }
-    .reveal{ opacity:0; animation:softFade 1.4s ease-out forwards; }
-
-    /* Prevent animation before scroll trigger */
-    .reveal, .reveal-up { animation-play-state: paused; }
+    html { scroll-behavior: smooth; }
+    body { -webkit-font-smoothing: antialiased; }
+    .fade-in { animation: fadeIn 0.8s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
   </style>
 </head>
 
-<body class="bg-[#f7f4ef] text-slate-900 font-sans overflow-x-hidden">
+<body class="bg-stone-warm text-ink font-sans font-light">
 
 <%@ include file="includes/header.jsp" %>
 
-<!-- MAIN CONTAINER -->
-<div class="w-full max-w-[1800px] mx-auto">
+<main class="pt-20">
 
-<!-- HERO SECTION -->
-<section class="relative px-6 sm:px-10 lg:px-24 
-                pt-28 sm:pt-32 lg:pt-40 
-                pb-20 lg:pb-32
-                flex flex-col lg:flex-row items-center gap-14 lg:gap-24">
+  <section class="px-5 md:px-12 lg:px-20 py-16 md:py-24">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        
+        <div class="order-2 lg:order-1">
+          <span class="inline-block text-copper text-xs uppercase tracking-[0.2em] mb-6">Est. 2024</span>
+          <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-medium text-ink leading-[1.1] mb-8">
+            Where care<br>becomes craft
+          </h1>
+          <p class="text-ink-light text-base md:text-lg leading-relaxed mb-10 max-w-md">
+            Thoughtful eldercare rooted in dignity. We bring the warmth of home to every interaction.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a href="<%=request.getContextPath()%>/services"
+               class="inline-flex items-center gap-2 bg-ink text-white px-6 py-3 text-sm font-normal hover:bg-ink-light transition-colors">
+               View Services
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="#about" class="inline-flex items-center gap-2 text-ink text-sm font-normal hover:text-copper transition-colors px-2 py-3">
+               Learn more
+            </a>
+          </div>
+        </div>
 
-  <!-- LEFT TEXT -->
-  <div class="flex-1 text-center lg:text-left reveal">
-    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-[#1e2a38] leading-tight mb-6">
-      Caring with Dignity,<br>
-      Living with Comfort.
-    </h1>
+        <div class="order-1 lg:order-2">
+          <div class="relative">
+            <div class="aspect-[4/5] overflow-hidden">
+              <img src="images/elderlycarehero.png" alt="Care" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-copper-light/20 w-24 h-24 md:w-32 md:h-32"></div>
+          </div>
+        </div>
 
-    <p class="text-base sm:text-lg text-slate-700 leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
-      A modern approach to elderly care. Where empathy, trust and design meet to support your loved ones.
-    </p>
-
-    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-      <a href="<%=request.getContextPath()%>/public/services.jsp"
-         class="px-8 py-3 bg-[#1e2a38] text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
-         Explore Services
-      </a>
-
-      <a href="#about"
-         class="px-8 py-3 border border-[#1e2a38] text-[#1e2a38] rounded-lg hover:bg-[#1e2a3810] transition-all duration-300">
-         Learn More
-      </a>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- RIGHT IMAGE -->
-  <div class="flex-1 flex justify-center reveal-up relative">
-    <div class="absolute inset-0 bg-gradient-radial from-[#d8cbb8]/40 to-transparent blur-3xl scale-110 pointer-events-none"></div>
+  <section class="border-t border-stone-mid">
+    <div class="grid grid-cols-2 md:grid-cols-4">
+      <div class="p-6 md:p-10 border-r border-b md:border-b-0 border-stone-mid">
+        <span class="font-serif text-3xl md:text-4xl text-copper">12+</span>
+        <p class="text-ink-muted text-sm mt-2">Years of service</p>
+      </div>
+      <div class="p-6 md:p-10 border-b md:border-b-0 md:border-r border-stone-mid">
+        <span class="font-serif text-3xl md:text-4xl text-copper">500</span>
+        <p class="text-ink-muted text-sm mt-2">Families supported</p>
+      </div>
+      <div class="p-6 md:p-10 border-r border-stone-mid">
+        <span class="font-serif text-3xl md:text-4xl text-copper">24/7</span>
+        <p class="text-ink-muted text-sm mt-2">Care available</p>
+      </div>
+      <div class="p-6 md:p-10">
+        <span class="font-serif text-3xl md:text-4xl text-copper">98%</span>
+        <p class="text-ink-muted text-sm mt-2">Satisfaction rate</p>
+      </div>
+    </div>
+  </section>
 
-    <img src="images/elderlycarehero.png"
-         alt="Elderly Care Illustration"
-         class="relative w-full max-w-xl rounded-3xl shadow-xl object-cover" />
-  </div>
+  <section id="about" class="px-5 md:px-12 lg:px-20 py-20 md:py-28">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid lg:grid-cols-5 gap-12 lg:gap-16">
+        
+        <div class="lg:col-span-2">
+          <span class="text-copper text-xs uppercase tracking-[0.2em]">Our Philosophy</span>
+          <h2 class="font-serif text-3xl md:text-4xl font-medium mt-4 leading-tight">
+            Care is not a service. It is a relationship.
+          </h2>
+        </div>
 
-</section>
+        <div class="lg:col-span-3 space-y-6 text-ink-light">
+          <p class="text-base leading-relaxed">
+            We believe that aging should be met with grace, not apprehension. Our approach draws from decades of experience, combining professional expertise with genuine human connection.
+          </p>
+          <p class="text-base leading-relaxed">
+            Every caregiver in our network undergoes rigorous training, but more importantly, they share our conviction that every person deserves attentive, respectful care.
+          </p>
+          <div class="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="border-l-2 border-stone-deep pl-4">
+              <span class="text-ink font-medium text-sm">Verified Training</span>
+              <p class="text-sm text-ink-muted mt-1">Background checked, certified professionals</p>
+            </div>
+            <div class="border-l-2 border-stone-deep pl-4">
+              <span class="text-ink font-medium text-sm">Personalised Plans</span>
+              <p class="text-sm text-ink-muted mt-1">Tailored to individual needs and preferences</p>
+            </div>
+          </div>
+        </div>
 
+      </div>
+    </div>
+  </section>
 
-<!-- ABOUT SECTION -->
-<section id="about" class="py-20 sm:py-24 bg-[#fdfbf7] px-6 sm:px-10 lg:px-24 reveal">
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-6xl mx-auto">
+  <section id="services" class="bg-white px-5 md:px-12 lg:px-20 py-20 md:py-28">
+    <div class="max-w-6xl mx-auto">
+      
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
+        <div>
+          <span class="text-copper text-xs uppercase tracking-[0.2em]">What We Offer</span>
+          <h2 class="font-serif text-3xl md:text-4xl font-medium mt-4">Services</h2>
+        </div>
+        <a href="<%=request.getContextPath()%>/services" class="text-ink-muted text-sm hover:text-copper transition-colors flex items-center gap-2">
+          See all services
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+      </div>
 
-    <!-- ABOUT IMAGE -->
-    <img src="images/elderlycarehero.png"
-         class="rounded-3xl shadow-md border border-[#e6e1da] w-full">
+      <div id="services-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-stone-mid">
+        <div class="bg-white p-8 text-ink-muted">Loading...</div>
+      </div>
 
-    <!-- ABOUT TEXT -->
-    <div>
-      <h2 class="text-3xl sm:text-4xl font-serif font-semibold text-[#1e2a38] mb-6">
-        A Tradition of Care, Evolved for Today
-      </h2>
+    </div>
+  </section>
 
-      <p class="text-slate-700 leading-relaxed mb-6">
-        Inspired by the timeless charm of Prague and the minimalism of Scandinavian design,
-        SilverCare blends warmth, elegance and practicality to create a care experience built on trust.
+  <section class="px-5 md:px-12 lg:px-20 py-20 md:py-28 bg-forest text-white">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl font-medium mb-6">Ready to begin?</h2>
+      <p class="text-white/70 text-base md:text-lg mb-10 max-w-xl mx-auto">
+        Reach out to discuss how we can support you and your family with care that truly understands.
       </p>
-
-      <ul class="space-y-3 text-slate-700">
-        <li>• Trusted caregivers with verified training</li>
-        <li>• Personalised support tailored to each family</li>
-        <li>• Transparent communication and real-time updates</li>
-      </ul>
+      <a href="<%=request.getContextPath()%>/register"
+         class="inline-flex items-center gap-2 bg-white text-forest px-8 py-4 text-sm font-medium hover:bg-stone-warm transition-colors">
+         Get Started
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
     </div>
-  </div>
-</section>
+  </section>
 
-
-<!-- SERVICES SECTION -->
-<section id="services" class="py-20 sm:py-24 px-6 sm:px-10 lg:px-24 reveal">
-  <div class="max-w-6xl mx-auto text-center">
-
-    <h2 class="text-3xl sm:text-4xl font-serif font-semibold text-[#1e2a38] mb-4">Our Services</h2>
-    <p class="text-slate-600 max-w-2xl mx-auto mb-12">
-      Designed to deliver calm, confidence and comfort — with a consistent Scandinavian simplicity.
-    </p>
-
-	<div id="services-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-	  <!-- Services will be loaded dynamically via JavaScript -->
-	  <div class="col-span-full text-slate-500">Loading services...</div>
-	</div>
-
-    <div class="mt-12">
-      <a href="<%=request.getContextPath()%>/public/services.jsp" class="text-[#1e2a38] font-medium hover:underline">View all services →</a>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- CTA -->
-<section class="bg-[#1e2a38] text-white py-20 sm:py-24 px-6 sm:px-10 lg:px-24 reveal-up">
-  <div class="max-w-5xl mx-auto text-center">
-
-    <h2 class="text-3xl sm:text-4xl font-serif font-semibold mb-4">Care That Feels Like Home</h2>
-    <p class="text-[#e0e6ed] max-w-2xl mx-auto mb-10">
-      Simple, honest, and made for families — a digital experience built for real care.
-    </p>
-
-    <a href="<%=request.getContextPath()%>/public/register.jsp"
-       class="bg-white text-[#1e2a38] px-10 py-3 rounded-lg shadow hover:bg-[#f2f4f7] transition-all duration-300">
-       Get Started
-    </a>
-  </div>
-</section>
-
-</div>
+</main>
 
 <%@ include file="includes/footer.jsp" %>
 
 <script>
-  const revealEls = document.querySelectorAll('.reveal, .reveal-up');
-  function revealOnScroll() {
-    const trigger = window.innerHeight * 0.90;
-    revealEls.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < trigger) el.style.animationPlayState = 'running';
-    });
-  }
-  window.addEventListener('scroll', revealOnScroll);
-  window.addEventListener('load', revealOnScroll);
+  var API_BASE_URL = 'http://localhost:8081/api';
+  var ctx = '<%=request.getContextPath()%>';
 
-  // Fetch services from Spring Boot backend
-  const API_BASE_URL = 'http://localhost:8081/api';
-  const ctx = '<%=request.getContextPath()%>';
-  
-  console.log('API_BASE_URL:', API_BASE_URL);  // Debug log
-
-  // Utility function to escape HTML and prevent XSS
   function escapeHtml(text) {
     if (!text) return '';
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
 
-  // Validate and sanitize image path
   function sanitizeImagePath(img) {
     if (!img || img.trim() === '') {
       return '/images/default-service.png';
     }
-    // Only allow alphanumeric, slashes, dots, hyphens, underscores
-    const sanitized = img.replace(/[^a-zA-Z0-9\/.\-_]/g, '');
+    var sanitized = img.replace(/[^a-zA-Z0-9\/.\-_]/g, '');
     return sanitized.startsWith('/') ? sanitized : '/' + sanitized;
   }
 
-  async function loadServices() {
-    const container = document.getElementById('services-container');
-    const fetchUrl = API_BASE_URL + '/services';
-    console.log('Fetching services from:', fetchUrl);
+  function loadServices() {
+    var container = document.getElementById('services-container');
+    var fetchUrl = API_BASE_URL + '/services';
     
-    try {
-      const response = await fetch(fetchUrl, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+    fetch(fetchUrl, {
+      method: 'GET',
+      mode: 'cors',
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(response) {
+      if (!response.ok) throw new Error('Failed to fetch');
+      return response.json();
+    })
+    .then(function(services) {
+      if (!Array.isArray(services)) throw new Error('Invalid format');
       
-      console.log('Response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch services: ' + response.status);
-      }
-      
-      const services = await response.json();
-      
-      // Validate response is an array
-      if (!Array.isArray(services)) {
-        throw new Error('Invalid response format');
-      }
-      
-      // Display only first 3 services
-      const displayServices = services.slice(0, 3);
+      var displayServices = services.slice(0, 3);
       
       if (displayServices.length === 0) {
-        container.innerHTML = '<div class="col-span-full text-slate-500">No services available.</div>';
+        container.innerHTML = '<div class="bg-white p-8 text-ink-muted col-span-full">No services available.</div>';
         return;
       }
       
-      container.innerHTML = displayServices.map(service => {
-        // Sanitize all output
-        const imgPath = sanitizeImagePath(service.imagePath || service.image_path);
-        const imgSrc = ctx + imgPath;
-        const serviceName = escapeHtml(service.serviceName || service.service_name || 'Service');
-        const description = escapeHtml(service.description || '');
+      container.innerHTML = displayServices.map(function(service, i) {
+        var imgPath = sanitizeImagePath(service.imagePath || service.image_path);
+        var imgSrc = ctx + imgPath;
+        var serviceName = escapeHtml(service.serviceName || service.service_name || 'Service');
+        var description = escapeHtml(service.description || '');
+        var price = service.price ? service.price.toFixed(0) : '—';
         
-        return '<div class="group bg-white rounded-3xl shadow-sm border border-[#e9e5df] hover:shadow-xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">' +
-            '<img src="' + imgSrc + '" class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src=\'' + ctx + '/images/default-service.png\'">' +
-            '<div class="p-8 text-left">' +
-              '<h3 class="text-xl sm:text-2xl font-serif font-semibold text-[#1e2a38] mb-3">' + serviceName + '</h3>' +
-              '<p class="text-slate-600 text-sm leading-relaxed">' + description + '</p>' +
+        return '<article class="bg-white p-0 group fade-in stagger-' + (i + 1) + '">' +
+            '<div class="aspect-[3/2] overflow-hidden">' +
+              '<img src="' + imgSrc + '" alt="' + serviceName + '" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" onerror="this.src=\'' + ctx + '/images/default-service.png\'">' +
             '</div>' +
-          '</div>';
+            '<div class="p-6 md:p-8">' +
+              '<div class="flex items-start justify-between gap-4 mb-3">' +
+                '<h3 class="font-serif text-xl font-medium text-ink">' + serviceName + '</h3>' +
+                '<span class="text-copper text-sm whitespace-nowrap">$' + price + '</span>' +
+              '</div>' +
+              '<p class="text-ink-muted text-sm leading-relaxed line-clamp-2">' + description + '</p>' +
+            '</div>' +
+          '</article>';
       }).join('');
-      
-    } catch (error) {
-      console.error('Error loading services:', error);
-      container.innerHTML = '<div class="col-span-full text-red-500">Failed to load services. Please try again later.</div>';
-    }
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+      container.innerHTML = '<div class="bg-white p-8 text-ink-muted col-span-full">Unable to load services.</div>';
+    });
   }
 
-  // Load services when page loads
   document.addEventListener('DOMContentLoaded', loadServices);
 </script>
 
