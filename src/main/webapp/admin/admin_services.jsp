@@ -9,9 +9,9 @@
                 <meta charset="UTF-8" />
                 <title>Manage Services | SilverCare Admin</title>
                 <% Object userRole=session.getAttribute("sessRole"); if(userRole==null){
-                    response.sendRedirect(request.getContextPath()+"/public/login.jsp?errCode=NoSession"); } else{
+                    response.sendRedirect(request.getContextPath()+"/login?errCode=NoSession"); } else{
                     String userRoleString=session.getAttribute("sessRole").toString(); if(!"admin".equals(userRole)){
-                    System.out.print(userRole); response.sendRedirect(request.getContextPath()+"/index.jsp"); return; }
+                    System.out.print(userRole); response.sendRedirect(request.getContextPath()+"/"); return; }
                     } %>
                     <!-- Tailwind via CDN -->
                     <script src="https://cdn.tailwindcss.com"></script>

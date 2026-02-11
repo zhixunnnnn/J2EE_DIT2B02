@@ -12,7 +12,7 @@
 			response.sendRedirect(request.getContextPath() + "/customersServlet?action=retrieveUser" ); return; }
 			ArrayList<Country> countryList = (ArrayList<Country>) session.getAttribute("countryList");
 				if (countryList == null) {
-				response.sendRedirect(request.getContextPath() + "/countryCodeServlet?origin=customer/profile.jsp");
+				response.sendRedirect(request.getContextPath() + "/countryCodeServlet?origin=profile");
 				return;
 				}
 				String userFlagImage = null;
@@ -120,7 +120,7 @@
 									</div>
 
 									<button type="button"
-										onclick="window.location.href='<%=request.getContextPath()%>/customer/edit_profile.jsp'"
+										onclick="window.location.href='<%=request.getContextPath()%>/profile/edit'"
 										class="inline-flex items-center justify-center
                    rounded-full border border-[#ddd5c7]
                    bg-[#f8f2e8]

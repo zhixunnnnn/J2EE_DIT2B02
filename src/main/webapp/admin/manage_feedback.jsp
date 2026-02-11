@@ -12,7 +12,7 @@
 
                     <% Object userRole=session.getAttribute("sessRole"); if (userRole==null ||
                         !"admin".equals(userRole.toString())) { response.sendRedirect(request.getContextPath()
-                        + "/public/login.jsp?errCode=NoSession" ); return; } %>
+                        + "/login?errCode=NoSession" ); return; } %>
 
                         <script src="https://cdn.tailwindcss.com"></script>
 

@@ -9,9 +9,9 @@
             <meta charset="UTF-8" />
             <title>SilverCare Admin Dashboard</title>
             <% Object userRole=session.getAttribute("sessRole"); if(userRole==null){
-                response.sendRedirect(request.getContextPath()+"/public/login.jsp?errCode=NoSession"); return; } String
+                response.sendRedirect(request.getContextPath()+"/login?errCode=NoSession"); return; } String
                 userRoleString=userRole.toString(); if (!"admin".equals(userRoleString)) {
-                response.sendRedirect(request.getContextPath() + "/index.jsp" ); return; } Customer u=(Customer)
+                response.sendRedirect(request.getContextPath() + "/" ); return; } Customer u=(Customer)
                 session.getAttribute("user"); if(u==null){
                 response.sendRedirect(request.getContextPath()+"/customersServlet?action=retrieveUser"); return; } %>
 
@@ -225,7 +225,7 @@
                                     class="panel-card bg-white/90 border border-slate-200 rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
                                     <div class="flex items-center justify-between mb-3">
                                         <h2 class="text-lg font-semibold tracking-tight">Recent Feedback</h2>
-                                        <a href="${pageContext.request.contextPath}/admin/adminFeedback.jsp"
+                                        <a href="${pageContext.request.contextPath}/admin/feedback"
                                             class="text-[11px] text-slate-600 hover:underline">
                                             View all
                                         </a>
@@ -330,25 +330,25 @@
                                 </p>
 
                                 <div class="space-y-3 text-xs">
-                                    <a href="${pageContext.request.contextPath}/admin/adminAddService.jsp"
+                                    <a href="${pageContext.request.contextPath}/admin/services/create"
                                         class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
                                         <span>Add a new service</span>
                                         <span class="text-[11px] text-slate-500">Services · Add</span>
                                     </a>
 
-                                    <a href="${pageContext.request.contextPath}/admin/adminServices.jsp"
+                                    <a href="${pageContext.request.contextPath}/admin/services"
                                         class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
                                         <span>Review all services</span>
                                         <span class="text-[11px] text-slate-500">Services · List</span>
                                     </a>
 
-                                    <a href="${pageContext.request.contextPath}/admin/manage_customers.jsp"
+                                    <a href="${pageContext.request.contextPath}/admin/customers"
                                         class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
                                         <span>View customer directory</span>
                                         <span class="text-[11px] text-slate-500">Customers</span>
                                     </a>
 
-                                    <a href="${pageContext.request.contextPath}/admin/adminFeedback.jsp"
+                                    <a href="${pageContext.request.contextPath}/admin/feedback"
                                         class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-2.5 bg-white hover:bg-slate-50">
                                         <span>Check latest feedback</span>
                                         <span class="text-[11px] text-slate-500">Feedback</span>

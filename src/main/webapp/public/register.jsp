@@ -16,13 +16,13 @@
 
     ArrayList<Country> countryList = (ArrayList<Country>) session.getAttribute("countryList");
     if (countryList == null) {
-        response.sendRedirect(request.getContextPath() + "/countryCodeServlet?origin=public/register.jsp");
+        response.sendRedirect(request.getContextPath() + "/countryCodeServlet?origin=register");
         return;
     }
 
     Object userRole = session.getAttribute("sessRole");
     if (userRole != null) {
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        response.sendRedirect(request.getContextPath() + "/");
         return;
     }
   %>
@@ -373,7 +373,7 @@
                   action="<%= request.getContextPath() %>/customersServlet"
                   class="space-y-6">
               <input type="hidden" name="action" value="create">
-              <input type="hidden" name="origin" value="public/login.jsp">
+              <input type="hidden" name="origin" value="login">
 
               <!-- STEP 1: Account & contact -->
               <div id="step-1" class="space-y-5">
@@ -698,7 +698,7 @@
 
                 <p class="text-[12px] text-slate-600 text-center">
                   Already have an account?
-                  <a href="<%= request.getContextPath() %>/public/login.jsp"
+                  <a href="<%= request.getContextPath() %>/login"
                      class="font-medium text-[#1e2a38] underline underline-offset-4">
                     Log in instead
                   </a>

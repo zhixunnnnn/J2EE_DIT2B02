@@ -5,214 +5,157 @@
 
     <header id="navbar" class="fixed top-0 left-0 w-full z-[100] transition-all duration-300">
       <div class="nav-container">
-        <div class="max-w-7xl mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-5 md:px-12 py-4 flex items-center justify-between">
 
           <!-- BRAND -->
-          <a href="<%=request.getContextPath()%>/index.jsp" class="flex items-center gap-3 group select-none">
-            <img src="<%=request.getContextPath()%>/images/logo.png" class="h-9 w-9 rounded-[18px]
-                    border border-[#e0dcd4]
-                    bg-[#f7f3ec]
-                    object-contain
-                    transition-transform duration-300 group-hover:scale-105" />
-
-            <span class="text-[22px] md:text-[24px] font-serif font-semibold tracking-tight text-[#1e2a38]
-                     group-hover:text-[#121825]
+          <a href="<%=request.getContextPath()%>/" class="flex items-center gap-2 group select-none">
+            <span class="font-serif text-xl md:text-2xl font-medium tracking-tight text-ink
+                     group-hover:text-copper
                      transition-colors duration-200">
               SilverCare
             </span>
           </a>
 
           <!-- HAMBURGER (MOBILE ONLY) -->
-          <button id="menuBtn" class="md:hidden flex flex-col justify-center items-center space-y-1.5
-                     rounded-full px-2.5 py-1.5
-                     bg-[#fdf9f3] border border-[#e0dcd4]
-                     shadow-[0_6px_18px_rgba(15,23,42,0.12)]
+          <button id="menuBtn" class="md:hidden flex flex-col justify-center items-center gap-1.5
+                     p-2
                      transition-all duration-200 active:scale-95">
-            <span class="line w-5 h-0.5 bg-[#1e2a38] rounded-full transition-all duration-200"></span>
-            <span class="line w-5 h-0.5 bg-[#1e2a38] rounded-full transition-all duration-200"></span>
-            <span class="line w-5 h-0.5 bg-[#1e2a38] rounded-full transition-all duration-200"></span>
+            <span class="line w-5 h-px bg-ink transition-all duration-200"></span>
+            <span class="line w-5 h-px bg-ink transition-all duration-200"></span>
           </button>
 
           <!-- DESKTOP NAV -->
-          <nav class="hidden md:flex items-center space-x-8 text-[14px] font-medium">
-            <a href="<%=request.getContextPath()%>/index.jsp" class="nav-link">Home</a>
-            <a href="<%=request.getContextPath()%>/public/services.jsp" class="nav-link">Services</a>
+          <nav class="hidden md:flex items-center gap-8 text-sm font-light">
+            <a href="<%=request.getContextPath()%>/" class="nav-link">Home</a>
+            <a href="<%=request.getContextPath()%>/services" class="nav-link">Services</a>
 
             <% if ("admin".equals(userRoleStringHeader)) { %>
-              <a href="<%=request.getContextPath()%>/admin/dashboard" class="nav-link">Admin</a>
-              <% } %>
+              <a href="<%=request.getContextPath()%>/admin" class="nav-link">Admin</a>
+            <% } %>
 
-                <% if ("customer".equals(userRoleStringHeader) || "admin" .equals(userRoleStringHeader)) { %>
-                  <a href="<%=request.getContextPath()%>/customer/profile.jsp" class="nav-link">Profile</a>
-                  <% } %>
+            <% if ("customer".equals(userRoleStringHeader) || "admin".equals(userRoleStringHeader)) { %>
+              <a href="<%=request.getContextPath()%>/profile" class="nav-link">Profile</a>
+            <% } %>
 
-                    <% if (!isLoggedInHeader) { %>
-                      <a href="<%=request.getContextPath()%>/public/register.jsp" class="nav-link">Register</a>
-
-                      <a href="<%=request.getContextPath()%>/public/login.jsp" class="ml-3 inline-flex items-center justify-center
-                    px-4 py-2 rounded-full
-                    bg-[#1e2a38] text-[#fdfaf5]
-                    text-[13px] font-medium
-                    shadow-[0_10px_28px_rgba(15,23,42,0.30)]
-                    hover:bg-[#253447]
-                    active:scale-[0.98]
-                    transition-all duration-200">
-                        Login
-                      </a>
-                      <% } else { %>
-                        <a href="<%=request.getContextPath()%>/customer/cart.jsp" class="nav-link">Cart</a>
-                        <a href="<%=request.getContextPath()%>/customer/bookings" class="nav-link">My Bookings</a>
-
-                        <a href="<%=request.getContextPath()%>/customersServlet?action=logout" class="ml-3 inline-flex items-center justify-center
-                    px-4 py-2 rounded-full
-                    bg-[#1e2a38] text-[#fdfaf5]
-                    text-[13px] font-medium
-                    shadow-[0_10px_28px_rgba(15,23,42,0.30)]
-                    hover:bg-[#253447]
-                    active:scale-[0.98]
-                    transition-all duration-200">
-                          Logout
-                        </a>
-                        <% } %>
+            <% if (!isLoggedInHeader) { %>
+              <a href="<%=request.getContextPath()%>/register" class="nav-link">Register</a>
+              <a href="<%=request.getContextPath()%>/login" 
+                 class="ml-2 px-5 py-2 bg-ink text-stone-warm text-sm font-normal hover:bg-ink-light transition-colors">
+                Login
+              </a>
+            <% } else { %>
+              <a href="<%=request.getContextPath()%>/cart" class="nav-link">Cart</a>
+              <a href="<%=request.getContextPath()%>/bookings" class="nav-link">Bookings</a>
+              <a href="<%=request.getContextPath()%>/customersServlet?action=logout" 
+                 class="ml-2 px-5 py-2 bg-ink text-stone-warm text-sm font-normal hover:bg-ink-light transition-colors">
+                Logout
+              </a>
+            <% } %>
           </nav>
         </div>
       </div>
 
-      <!-- FULLSCREEN MOBILE MENU -->
+      <!-- MOBILE MENU -->
       <div id="fullscreenMenu" class="fixed inset-0 z-[90]
-              bg-[rgba(250,248,244,0.98)] backdrop-blur-xl
-              flex flex-col items-center justify-center
+              bg-stone-warm
+              flex flex-col
               opacity-0 pointer-events-none
-              transition-all duration-300 ease-out
-              transform translate-y-2">
+              transition-all duration-300 ease-out">
 
-        <button id="closeMenuBtn" class="absolute top-5 right-6 p-3 rounded-full
-                   bg-[#fdf9f3] border border-[#e0dcd4]
-                   shadow-[0_8px_24px_rgba(15,23,42,0.18)]
-                   transition-all duration-200 hover:scale-105 active:scale-95">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#1e2a38]" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
+        <div class="flex items-center justify-between px-5 py-4 border-b border-stone-mid">
+          <span class="font-serif text-xl font-medium text-ink">SilverCare</span>
+          <button id="closeMenuBtn" class="p-2 transition-all duration-200 hover:opacity-60">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-ink" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
 
-        <div class="flex flex-col items-center space-y-7">
-          <!-- All base links: consistent mobile typography -->
-          <a href="<%=request.getContextPath()%>/index.jsp"
-            class="mobile-link text-xl md:text-2xl tracking-tight text-[#1e2a38] font-medium">
-            Home
-          </a>
-          <a href="<%=request.getContextPath()%>/public/services.jsp"
-            class="mobile-link text-xl md:text-2xl tracking-tight text-[#1e2a38] font-medium">
-            Services
-          </a>
+        <div class="flex-1 flex flex-col px-5 py-8 gap-1">
+          <a href="<%=request.getContextPath()%>/" class="mobile-link">Home</a>
+          <a href="<%=request.getContextPath()%>/services" class="mobile-link">Services</a>
 
           <% if ("admin".equals(userRoleStringHeader)) { %>
-            <a href="<%=request.getContextPath()%>/admin/dashboard"
-              class="mobile-link text-xl md:text-2xl tracking-tight text-[#1e2a38] font-medium">
-              Admin
-            </a>
+            <a href="<%=request.getContextPath()%>/admin" class="mobile-link">Admin</a>
+          <% } %>
+
+          <% if (!isLoggedInHeader) { %>
+            <a href="<%=request.getContextPath()%>/register" class="mobile-link">Register</a>
+            <div class="mt-6 pt-6 border-t border-stone-mid">
+              <a href="<%=request.getContextPath()%>/login" 
+                 class="block text-center px-6 py-3 bg-ink text-stone-warm text-sm font-normal">
+                Login
+              </a>
+            </div>
+          <% } else { %>
+            <% if ("customer".equals(userRoleStringHeader) || "admin".equals(userRoleStringHeader)) { %>
+              <a href="<%=request.getContextPath()%>/profile" class="mobile-link">Profile</a>
             <% } %>
-
-              <% if (!isLoggedInHeader) { %>
-                <a href="<%=request.getContextPath()%>/public/register.jsp"
-                  class="mobile-link text-xl md:text-2xl tracking-tight text-[#1e2a38] font-medium">
-                  Register
-                </a>
-
-                <a href="<%=request.getContextPath()%>/public/login.jsp" class="mobile-link inline-flex items-center justify-center
-                  px-8 py-3 rounded-full
-                  bg-[#1e2a38] text-[#fdfaf5] text-[15px] font-medium
-                  shadow-[0_12px_32px_rgba(15,23,42,0.32)]
-                  hover:bg-[#253447] transition-all duration-200">
-                  Login
-                </a>
-                <% } else { %>
-
-                  <% if ("customer".equals(userRoleStringHeader) || "admin" .equals(userRoleStringHeader)) { %>
-                    <a href="<%=request.getContextPath()%>/customer/profile.jsp"
-                      class="mobile-link text-xl md:text-2xl tracking-tight text-[#1e2a38] font-medium">
-                      Profile
-                    </a>
-                    <% } %>
-
-                      <a href="<%=request.getContextPath()%>/customer/cart.jsp"
-                        class="mobile-link text-xl md:text-2xl tracking-tight text-[#1e2a38] font-medium">
-                        Cart
-                      </a>
-                      <a href="<%=request.getContextPath()%>/customer/bookings"
-                        class="mobile-link text-xl md:text-2xl tracking-tight text-[#1e2a38] font-medium">
-                        My Bookings
-                      </a>
-
-                      <a href="<%=request.getContextPath()%>/customersServlet?action=logout" class="mobile-link inline-flex items-center justify-center
-                  px-8 py-3 rounded-full
-                  bg-[#1e2a38] text-[#fdfaf5] text-[15px] font-medium
-                  shadow-[0_12px_32px_rgba(15,23,42,0.32)]
-                  hover:bg-[#253447] transition-all duration-200">
-                        Logout
-                      </a>
-                      <% } %>
+            <a href="<%=request.getContextPath()%>/cart" class="mobile-link">Cart</a>
+            <a href="<%=request.getContextPath()%>/bookings" class="mobile-link">Bookings</a>
+            <div class="mt-6 pt-6 border-t border-stone-mid">
+              <a href="<%=request.getContextPath()%>/customersServlet?action=logout" 
+                 class="block text-center px-6 py-3 bg-ink text-stone-warm text-sm font-normal">
+                Logout
+              </a>
+            </div>
+          <% } %>
         </div>
       </div>
 
       <style>
         .nav-container {
-          background-color: #faf8f4;
-          border-bottom: 1px solid #e0dcd4;
-          transition:
-            background-color 0.25s ease,
-            box-shadow 0.25s ease,
-            border-color 0.25s ease;
+          background-color: #f5f3ef;
+          border-bottom: 1px solid #e8e4dc;
+          transition: all 0.25s ease;
         }
 
         .nav-scrolled {
-          box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-          border-bottom-color: #d6d0c6;
+          background-color: rgba(245, 243, 239, 0.95);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
         }
 
         .nav-link {
-          position: relative;
-          color: #64748b;
-          padding-bottom: 2px;
-          transition: color 0.2s ease, transform 0.2s ease;
-        }
-
-        .nav-link::after {
-          content: "";
-          position: absolute;
-          left: 0;
-          bottom: -4px;
-          width: 0;
-          height: 2px;
-          border-radius: 999px;
-          background: #1e2a38;
-          transition: width 0.22s ease-out;
+          color: #5a5a5a;
+          transition: color 0.2s ease;
         }
 
         .nav-link:hover {
-          color: #1e2a38;
-          transform: translateY(-1px);
-        }
-
-        .nav-link:hover::after {
-          width: 100%;
+          color: #2c2c2c;
         }
 
         .mobile-link {
+          display: block;
+          padding: 12px 0;
+          font-size: 1.125rem;
+          color: #2c2c2c;
+          border-bottom: 1px solid #e8e4dc;
           opacity: 0;
-          transform: translateY(10px);
-          letter-spacing: 0.03em;
-          transition:
-            opacity 0.28s ease-out,
-            transform 0.28s ease-out;
+          transform: translateX(-8px);
+          transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+        }
+
+        .mobile-link:hover {
+          color: #b87a4b;
         }
 
         .mobile-link.show {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateX(0);
         }
+
+        .ink { color: #2c2c2c; }
+        .bg-ink { background-color: #2c2c2c; }
+        .text-ink { color: #2c2c2c; }
+        .text-ink-light { color: #5a5a5a; }
+        .bg-ink-light { background-color: #5a5a5a; }
+        .text-stone-warm { color: #f5f3ef; }
+        .bg-stone-warm { background-color: #f5f3ef; }
+        .text-copper { color: #b87a4b; }
+        .border-stone-mid { border-color: #e8e4dc; }
       </style>
     </header>
 
@@ -225,8 +168,7 @@
       const lines = menuBtn.querySelectorAll(".line");
       const mobileLinks = document.querySelectorAll(".mobile-link");
 
-      // Scroll behaviour – tiny lift + shadow
-      window.addEventListener("scroll", () => {
+      window.addEventListener("scroll", function() {
         if (window.scrollY > 40) {
           container.classList.add("nav-scrolled");
         } else {
@@ -235,47 +177,43 @@
       });
 
       function openMenu() {
-        lines[0].style.transform = "translateY(6px) rotate(45deg)";
-        lines[1].style.opacity = "0";
-        lines[2].style.transform = "translateY(-6px) rotate(-45deg)";
+        lines[0].style.transform = "translateY(4px) rotate(45deg)";
+        lines[1].style.transform = "translateY(-4px) rotate(-45deg)";
 
         fullscreenMenu.style.pointerEvents = "auto";
         fullscreenMenu.style.opacity = "1";
-        fullscreenMenu.style.transform = "translateY(0)";
 
-        mobileLinks.forEach((link, i) => {
-          setTimeout(() => link.classList.add("show"), i * 70);
+        mobileLinks.forEach(function(link, i) {
+          setTimeout(function() { link.classList.add("show"); }, i * 50);
         });
       }
 
       function closeMenu() {
         lines[0].style.transform = "translateY(0) rotate(0)";
-        lines[1].style.opacity = "1";
-        lines[2].style.transform = "translateY(0) rotate(0)";
+        lines[1].style.transform = "translateY(0) rotate(0)";
 
         fullscreenMenu.style.opacity = "0";
-        fullscreenMenu.style.transform = "translateY(8px)";
         fullscreenMenu.style.pointerEvents = "none";
 
-        mobileLinks.forEach(link => link.classList.remove("show"));
+        mobileLinks.forEach(function(link) { link.classList.remove("show"); });
       }
 
-      let isOpen = false;
+      var isOpen = false;
 
-      menuBtn.addEventListener("click", () => {
+      menuBtn.addEventListener("click", function() {
         isOpen ? closeMenu() : openMenu();
         isOpen = !isOpen;
       });
 
-      closeMenuBtn.addEventListener("click", () => {
+      closeMenuBtn.addEventListener("click", function() {
         if (isOpen) {
           closeMenu();
           isOpen = false;
         }
       });
 
-      mobileLinks.forEach(link => {
-        link.addEventListener("click", () => {
+      mobileLinks.forEach(function(link) {
+        link.addEventListener("click", function() {
           if (isOpen) {
             closeMenu();
             isOpen = false;
