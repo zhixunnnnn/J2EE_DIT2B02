@@ -9,76 +9,58 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-/**
- * Servlet implementation class countryCodeServlet
- */
 @WebServlet("/countryCodeServlet")
 public class countryCodeServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public countryCodeServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		HttpSession session = request.getSession(false);
+        String errText = "";
+        String errCode = request.getParameter("errCode");
+        String origin = request.getParameter("origin");
+        if (errCode != null) {
+            errText = errCode;
+        }
 
-		String errText = "";
-		String errCode = request.getParameter("errCode");
-		String origin = request.getParameter("origin");
-		if (errCode != null) {
-			errText = errCode;
-		}
+        HttpSession session = request.getSession(true); // create session if not exists
 
-		try {
-			// 2. Load MySQL JDBC
-			Connection conn = DBUtil.getConnection();
-			ArrayList<Country> countryList = new ArrayList<Country>();
-			// 4. Query database
-			String sqlStr = "SELECT * from country_code";
-			PreparedStatement pstmt = conn.prepareStatement(sqlStr);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				Country c = new Country(rs.getInt("id"), rs.getString("country_code"), rs.getString("country_name"),
-						rs.getString("iso2"), rs.getString("flag_image"));
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM country_code");
+             ResultSet rs = pstmt.executeQuery()) {
 
-				countryList.add(c);
-			}
-			session.setAttribute("countryList", countryList);
-			// 7. Cleanup
-			conn.close();
-			response.sendRedirect(request.getContextPath() + "/" + origin + "?errCode=" + errText);
+            ArrayList<Country> countryList = new ArrayList<>();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.sendRedirect(request.getContextPath() + "/" + origin + "?errCode=" + e);
-			return;
-		}
-	}
+            while (rs.next()) {
+                Country c = new Country(
+                        rs.getInt("id"),
+                        rs.getInt("country_code"), // changed to int
+                        rs.getString("country_name"),
+                        rs.getString("iso2"),
+                        rs.getString("flag_image")
+                );
+                countryList.add(c);
+            }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+            session.setAttribute("countryList", countryList);
 
+            // safe redirect: fallback if origin is null
+            String redirectPath = (origin != null && !origin.isBlank()) ? origin : "index.jsp";
+            response.sendRedirect(request.getContextPath() + "/" + redirectPath + "?errCode=" + errText);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            String redirectPath = (origin != null && !origin.isBlank()) ? origin : "index.jsp";
+            response.sendRedirect(request.getContextPath() + "/" + redirectPath + "?errCode=DBError");
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
 }
