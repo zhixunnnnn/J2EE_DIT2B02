@@ -201,7 +201,18 @@
 
             <% if (u.getLastLogin() != null) { %>
             <div class="border-t border-stone-mid pt-4 mt-6">
-                <p class="text-xs text-ink-muted">Last login: <%= u.getLastLogin() %></p>
+                <p class="text-xs text-ink-muted">Last login:
+                <%
+                    try {
+                        String raw = u.getLastLogin();
+                        java.time.ZonedDateTime zdt = java.time.ZonedDateTime.parse(raw);
+                        java.time.ZonedDateTime local = zdt.withZoneSameInstant(java.time.ZoneId.of("Asia/Singapore"));
+                        out.print(local.format(java.time.format.DateTimeFormatter.ofPattern("d MMM yyyy, h:mm a")));
+                    } catch (Exception e) {
+                        out.print(u.getLastLogin());
+                    }
+                %>
+                </p>
             </div>
             <% } %>
         </div>
