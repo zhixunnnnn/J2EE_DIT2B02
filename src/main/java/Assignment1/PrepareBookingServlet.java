@@ -82,6 +82,7 @@ public class PrepareBookingServlet extends HttpServlet {
 
 		// Build bookingDetails array from all cart items
 		List<Map<String, Object>> bookingDetails = new ArrayList<>();
+		double subtotal = 0.0;
 		for (CartItem item : cart) {
 			Map<String, Object> detail = new HashMap<>();
 			detail.put("serviceId", item.getServiceId());
@@ -89,7 +90,12 @@ public class PrepareBookingServlet extends HttpServlet {
 			detail.put("quantity", item.getQuantity());
 			detail.put("unitPrice", item.getUnitPrice());
 			bookingDetails.add(detail);
+			subtotal += item.getLineTotal();
 		}
+
+		// Calculate GST (9%) and total
+		double gstAmount = subtotal * 0.09;
+		double totalAmount = subtotal + gstAmount;
 
 		// If serviceDate is null/empty, use tomorrow's date as fallback
 		if (serviceDate == null || serviceDate.isBlank()) {
@@ -99,12 +105,16 @@ public class PrepareBookingServlet extends HttpServlet {
 		}
 
 		// Build booking payload matching backend DTO:
-		// userId (UUID string), scheduledAt, status, notes, bookingDetails
+		// userId (UUID string), scheduledAt, status, notes, financial fields, bookingDetails
 		Map<String, Object> bookingData = new HashMap<>();
 		bookingData.put("userId", userId);
 		bookingData.put("scheduledAt", serviceDate);
 		bookingData.put("status", "pending");
 		bookingData.put("notes", notes != null ? notes : "");
+		bookingData.put("subtotalAmount", Math.round(subtotal * 100.0) / 100.0);
+		bookingData.put("gstAmount", Math.round(gstAmount * 100.0) / 100.0);
+		bookingData.put("totalAmount", Math.round(totalAmount * 100.0) / 100.0);
+		bookingData.put("paymentMethod", "stripe");
 		bookingData.put("bookingDetails", bookingDetails);
 
 		System.out.println("[PrepareBooking] Sending payload: userId=" + userId

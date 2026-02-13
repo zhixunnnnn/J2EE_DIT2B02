@@ -71,11 +71,15 @@ public class PaymentServlet extends HttpServlet {
 			boolean allSuccess = true;
 			StringBuilder bookingIds = new StringBuilder();
 
+			// Current timestamp for completedAt
+			String completedAtIso = java.time.Instant.now().toString();
+
 			// If a pending booking was created during checkout, update it to confirmed
 			if (pendingBookingId != null && !pendingBookingId.isBlank()) {
 				Map<String, Object> updateData = new HashMap<>();
 				updateData.put("status", "confirmed");
 				updateData.put("paymentIntentId", paymentIntentId);
+				updateData.put("completedAt", completedAtIso);
 				int status = ApiClient.put("/bookings/" + pendingBookingId, updateData);
 				if (status != 200) {
 					// Non-fatal: booking exists, just status update failed
@@ -105,12 +109,21 @@ public class PaymentServlet extends HttpServlet {
 				detail.put("unitPrice", item.getUnitPrice());
 				details.add(detail);
 
+				// Calculate financial fields for this individual booking
+				double itemSubtotal = item.getLineTotal();
+				double itemGst = itemSubtotal * 0.09;
+				double itemTotal = itemSubtotal + itemGst;
+
 				// Build booking payload matching backend entity structure
 				Map<String, Object> bookingData = new HashMap<>();
 				bookingData.put("userId", userId);
 				bookingData.put("scheduledAt", serviceDate);
 				bookingData.put("status", "confirmed");
 				bookingData.put("notes", notes != null ? notes : "");
+				bookingData.put("subtotalAmount", Math.round(itemSubtotal * 100.0) / 100.0);
+				bookingData.put("gstAmount", Math.round(itemGst * 100.0) / 100.0);
+				bookingData.put("totalAmount", Math.round(itemTotal * 100.0) / 100.0);
+				bookingData.put("paymentMethod", "stripe");
 				bookingData.put("bookingDetails", details);
 				
 				int status = ApiClient.post("/bookings", bookingData);
