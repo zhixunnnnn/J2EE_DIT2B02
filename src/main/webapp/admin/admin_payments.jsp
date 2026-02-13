@@ -156,19 +156,15 @@
 
             <!-- Statistics Cards -->
             <section class="mb-10 stagger-3">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-5">
                     <%
                         String totalPayments = stats.getOrDefault("totalPayments", "0");
                         String totalAmount = stats.getOrDefault("totalAmount", "0");
-                        String totalRefunded = stats.getOrDefault("totalRefunded", "0");
                         String avgAmount = stats.getOrDefault("averagePaymentAmount", "0");
-                        String refundRate = stats.getOrDefault("refundRate", "0");
 
                         long totalAmtCents = 0;
-                        long totalRefCents = 0;
                         long avgCents = 0;
                         try { totalAmtCents = Long.parseLong(totalAmount); } catch (Exception e) {}
-                        try { totalRefCents = Long.parseLong(totalRefunded); } catch (Exception e) {}
                         try { avgCents = Long.parseLong(avgAmount); } catch (Exception e) {}
                     %>
                     <article class="metric-card bg-white border border-stone-mid p-5">
@@ -191,17 +187,6 @@
                         </div>
                         <p class="font-serif text-3xl font-medium text-ink text-mono">$<%= String.format("%.2f", totalAmtCents / 100.0) %></p>
                         <p class="text-xs text-ink-muted mt-1">Total revenue</p>
-                    </article>
-
-                    <article class="metric-card bg-white border border-stone-mid p-5">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs uppercase tracking-wide text-ink-muted">Refunded</span>
-                            <svg class="w-4 h-4 text-copper" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-                            </svg>
-                        </div>
-                        <p class="font-serif text-3xl font-medium text-ink text-mono">$<%= String.format("%.2f", totalRefCents / 100.0) %></p>
-                        <p class="text-xs text-ink-muted mt-1">Total refunds</p>
                     </article>
 
                     <article class="metric-card bg-white border border-stone-mid p-5">

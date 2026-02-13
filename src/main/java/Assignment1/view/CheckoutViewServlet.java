@@ -33,23 +33,19 @@ public class CheckoutViewServlet extends HttpServlet {
 		}
 		
 		// Check if checkout data exists in session
-		Double amount = (Double) session.getAttribute("checkoutAmount");
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 		
-		if (amount == null && (cart == null || cart.isEmpty())) {
-			// No checkout data, redirect to cart
+		if (cart == null || cart.isEmpty()) {
 			response.sendRedirect(request.getContextPath() + "/cart?errCode=NoCheckoutData");
 			return;
 		}
 		
-		// If amount not set but cart exists, calculate it
-		if (amount == null && cart != null) {
-			double total = 0.0;
-			for (CartItem item : cart) {
-				total += item.getLineTotal();
-			}
-			session.setAttribute("checkoutAmount", total);
+		// Always recalculate amount from current cart to avoid stale/mismatched totals
+		double total = 0.0;
+		for (CartItem item : cart) {
+			total += item.getLineTotal();
 		}
+		session.setAttribute("checkoutAmount", Double.valueOf(total));
 		
 		// Set attributes for JSP
 		request.setAttribute("customerEmail", session.getAttribute("checkoutEmail"));

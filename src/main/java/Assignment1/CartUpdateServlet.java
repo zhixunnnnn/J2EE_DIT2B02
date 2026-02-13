@@ -32,29 +32,42 @@ public class CartUpdateServlet extends HttpServlet {
 		}
 
 		try {
-			int serviceId = Integer.parseInt(request.getParameter("service_id"));
+			String serviceIdParam = request.getParameter("service_id");
+			if (serviceIdParam == null || serviceIdParam.isEmpty()) {
+				response.sendRedirect(request.getContextPath() + "/cart");
+				return;
+			}
+			int serviceId = Integer.parseInt(serviceIdParam);
 			String action = request.getParameter("action");
 			String qtyParam = request.getParameter("quantity");
-			int quantity = (qtyParam != null && !qtyParam.isEmpty()) ? Integer.parseInt(qtyParam) : 0;
+			int quantity = 0;
+			if (qtyParam != null && !qtyParam.trim().isEmpty()) {
+				try {
+					quantity = Integer.parseInt(qtyParam.trim());
+					quantity = Math.max(0, Math.min(99, quantity)); // clamp 0-99
+				} catch (NumberFormatException e) {
+					quantity = 0;
+				}
+			}
 
-			if ("remove".equalsIgnoreCase(action)) {
+			if ("remove".equalsIgnoreCase(action) || quantity <= 0) {
 				cart.removeIf(item -> item.getServiceId() == serviceId);
-			} else if ("update".equalsIgnoreCase(action)) {
-				if (quantity <= 0) {
-					cart.removeIf(item -> item.getServiceId() == serviceId);
-				} else {
-					for (CartItem item : cart) {
-						if (item.getServiceId() == serviceId) {
-							item.setQuantity(quantity);
-							break;
-						}
+			} else {
+				boolean found = false;
+				for (CartItem item : cart) {
+					if (item.getServiceId() == serviceId) {
+						item.setQuantity(quantity);
+						found = true;
+						break;
 					}
+				}
+				if (!found) {
+					// Item was removed elsewhere, ignore
 				}
 			}
 
 			response.sendRedirect(request.getContextPath() + "/cart");
 		} catch (NumberFormatException e) {
-			// Ignore bad input, just redirect back
 			response.sendRedirect(request.getContextPath() + "/cart");
 		}
 	}

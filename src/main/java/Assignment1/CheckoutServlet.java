@@ -1,6 +1,8 @@
 package Assignment1;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,6 +70,20 @@ public class CheckoutServlet extends HttpServlet {
 			return;
 		}
 
+		// Validate service date is not in the past
+		try {
+			LocalDate serviceDate = LocalDate.parse(serviceDateStr);
+			if (serviceDate.isBefore(LocalDate.now())) {
+				System.out.println("[CheckoutServlet] Service date is in the past: " + serviceDateStr);
+				response.sendRedirect(request.getContextPath() + "/cart?errCode=DatePast");
+				return;
+			}
+		} catch (DateTimeParseException e) {
+			System.out.println("[CheckoutServlet] Invalid date format: " + serviceDateStr);
+			response.sendRedirect(request.getContextPath() + "/cart?errCode=DateInvalid");
+			return;
+		}
+
 		String notes = request.getParameter("notes");
 		String preferredTime = request.getParameter("preferred_time");
 
@@ -92,10 +108,16 @@ public class CheckoutServlet extends HttpServlet {
 			customerName = "Customer";
 		}
 
-		// 4) Calculate total amount
+		// 4) Calculate total amount from current cart (always recalc to avoid stale data)
 		double totalAmount = 0.0;
 		for (CartItem item : cart) {
 			totalAmount += item.getLineTotal();
+		}
+
+		if (totalAmount <= 0) {
+			System.out.println("[CheckoutServlet] Invalid total amount: " + totalAmount);
+			response.sendRedirect(request.getContextPath() + "/cart?errCode=InvalidAmount");
+			return;
 		}
 
 		// 5) Store checkout data in session
@@ -104,7 +126,7 @@ public class CheckoutServlet extends HttpServlet {
 		session.setAttribute("checkoutNotes", finalNotes);
 		session.setAttribute("checkoutEmail", customerEmail);
 		session.setAttribute("checkoutName", customerName);
-		session.setAttribute("checkoutAmount", totalAmount);
+		session.setAttribute("checkoutAmount", Double.valueOf(totalAmount));
 
 		System.out.println("[CheckoutServlet] Checkout data stored. Total: $" + totalAmount
 				+ ", serviceDate: " + serviceDateStr + ", userId: " + userId);

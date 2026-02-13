@@ -37,6 +37,16 @@
             response.sendRedirect(request.getContextPath() + "/login?errCode=NoSession");
             return;
         }
+        String errCode = request.getParameter("errCode");
+        String errMsg = null;
+        if (errCode != null) {
+            if ("DateNull".equals(errCode)) errMsg = "Please select a service date.";
+            else if ("DatePast".equals(errCode)) errMsg = "Service date cannot be in the past.";
+            else if ("DateInvalid".equals(errCode)) errMsg = "Invalid date format.";
+            else if ("InvalidAmount".equals(errCode)) errMsg = "Cart total is invalid. Please review your cart.";
+            else if ("EmptyCart".equals(errCode)) errMsg = "Your cart is empty. Add services to proceed.";
+            else if ("NoCheckoutData".equals(errCode)) errMsg = "Please complete the booking details in your cart first.";
+        }
     %>
 </head>
 
@@ -65,6 +75,11 @@
             <p class="mt-3 text-ink-light text-base max-w-xl">
                 Review the services you've selected. Adjust quantities or proceed to confirm your booking.
             </p>
+            <% if (errMsg != null) { %>
+            <div class="mt-4 p-4 border border-red-200 bg-red-50 text-red-700 text-sm">
+                <%= errMsg %>
+            </div>
+            <% } %>
         </div>
 
         <div class="bg-white border border-stone-mid p-5 md:p-8">
@@ -102,35 +117,36 @@
                         </thead>
                         <tbody class="divide-y divide-stone-mid">
                             <% for (CartItem item : cart) { %>
-                                <tr class="hover:bg-stone-warm/50">
+                                <tr class="hover:bg-stone-warm/50 cart-row" data-unit-price="<%= item.getUnitPrice() %>" data-service-id="<%= item.getServiceId() %>">
                                     <td class="py-4 pr-3 align-middle">
                                         <div class="font-medium text-ink"><%= item.getServiceName() %></div>
                                         <div class="text-xs text-ink-muted mt-0.5">ID: <%= item.getServiceId() %></div>
                                     </td>
                                     <td class="py-4 px-3 align-middle text-ink-light"><%= item.getCategoryName() %></td>
-                                    <td class="py-4 px-3 align-middle text-right text-ink-light">
+                                    <td class="py-4 px-3 align-middle text-right text-ink-light unit-price-cell">
                                         $<%= String.format("%.2f", item.getUnitPrice()) %>
                                     </td>
                                     <td class="py-4 px-3 align-middle text-center">
-                                        <form action="<%=request.getContextPath()%>/cart/update" method="post"
-                                              class="inline-flex items-center gap-2 justify-center">
+                                        <form action="<%=request.getContextPath()%>/cart/update" method="post" class="cart-update-form inline-flex items-center gap-2 justify-center">
                                             <input type="hidden" name="service_id" value="<%= item.getServiceId() %>">
-                                            <input type="number" name="quantity" min="0" value="<%= item.getQuantity() %>"
-                                                   class="w-16 border border-stone-mid px-3 py-1.5 text-sm text-center focus:outline-none focus:border-ink bg-white">
-                                            <button type="submit" name="action" value="update"
+                                            <input type="hidden" name="action" value="update">
+                                            <input type="number" name="quantity" min="1" max="99" value="<%= item.getQuantity() %>"
+                                                   class="cart-qty-input w-16 border border-stone-mid px-3 py-1.5 text-sm text-center focus:outline-none focus:border-ink bg-white">
+                                            <button type="submit"
                                                     class="text-xs px-3 py-1.5 border border-copper text-copper font-normal hover:bg-copper hover:text-white transition-colors">
                                                 Update
                                             </button>
                                         </form>
                                     </td>
-                                    <td class="py-4 px-3 align-middle text-right font-medium text-ink">
+                                    <td class="py-4 px-3 align-middle text-right font-medium text-ink line-total-cell">
                                         $<%= String.format("%.2f", item.getLineTotal()) %>
                                     </td>
                                     <td class="py-4 pl-3 align-middle text-center">
                                         <form action="<%=request.getContextPath()%>/cart/update" method="post">
                                             <input type="hidden" name="service_id" value="<%= item.getServiceId() %>">
                                             <input type="hidden" name="quantity" value="0">
-                                            <button type="submit" name="action" value="remove"
+                                            <input type="hidden" name="action" value="remove">
+                                            <button type="submit"
                                                     class="text-xs px-3 py-1.5 text-ink-muted hover:text-ink border border-stone-mid hover:border-ink transition-colors">
                                                 Remove
                                             </button>
@@ -158,7 +174,7 @@
                     </div>
                     <div class="text-right">
                         <div class="text-xs text-ink-muted uppercase tracking-[0.15em]">Total</div>
-                        <div class="font-serif text-2xl md:text-3xl font-medium text-ink mt-1">
+                        <div class="font-serif text-2xl md:text-3xl font-medium text-ink mt-1" id="cart-grand-total">
                             $<%= String.format("%.2f", totalAmount) %>
                         </div>
                     </div>
@@ -214,5 +230,31 @@
     </main>
 
     <%@ include file="../includes/footer.jsp" %>
+
+    <script>
+    (function() {
+        function formatMoney(n) {
+            return '$' + parseFloat(n).toFixed(2);
+        }
+        function recalcCart() {
+            var total = 0;
+            document.querySelectorAll('.cart-row').forEach(function(row) {
+                var unitPrice = parseFloat(row.getAttribute('data-unit-price')) || 0;
+                var qtyInput = row.querySelector('.cart-qty-input');
+                var qty = qtyInput ? (parseInt(qtyInput.value, 10) || 0) : 0;
+                var lineTotal = unitPrice * Math.max(0, qty);
+                total += lineTotal;
+                var lineCell = row.querySelector('.line-total-cell');
+                if (lineCell) lineCell.textContent = formatMoney(lineTotal);
+            });
+            var grandEl = document.getElementById('cart-grand-total');
+            if (grandEl) grandEl.textContent = formatMoney(total);
+        }
+        document.querySelectorAll('.cart-qty-input').forEach(function(input) {
+            input.addEventListener('input', recalcCart);
+            input.addEventListener('change', recalcCart);
+        });
+    })();
+    </script>
 </body>
 </html>

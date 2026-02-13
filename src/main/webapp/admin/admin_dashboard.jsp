@@ -30,6 +30,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script>
     tailwind.config = {
         theme: {
@@ -166,6 +167,36 @@
                     </div>
                 </div>
             </header>
+
+            <!-- Dashboard Charts -->
+            <section class="mb-12 stagger-3" id="chartsSection">
+                <div class="bg-white border border-stone-mid overflow-hidden">
+                    <div class="px-6 py-5 border-b border-stone-mid">
+                        <h2 class="font-serif text-lg font-medium text-ink">Analytics Overview</h2>
+                        <p class="text-sm text-ink-muted mt-1">Bookings, revenue, and popular services (last 7 days)</p>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div>
+                            <h3 class="text-sm font-medium text-ink-muted mb-3">Bookings by Day</h3>
+                            <div class="h-48">
+                                <canvas id="chartBookings"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-ink-muted mb-3">Revenue by Day</h3>
+                            <div class="h-48">
+                                <canvas id="chartRevenue"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-ink-muted mb-3">Popular Services</h3>
+                            <div class="h-48">
+                                <canvas id="chartServices"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- Metric Cards -->
             <section class="mb-12 stagger-3">
@@ -568,12 +599,116 @@
     </div>
 
     <script>
+    // Chart data from backend
+    var __chartsData = <%= request.getAttribute("chartsJson") != null ? request.getAttribute("chartsJson") : "{}" %>;
+
     window.addEventListener('load', function() {
         setTimeout(function() {
             document.getElementById('loader').classList.add('hidden');
             document.getElementById('pageContent').classList.add('visible');
         }, 400);
+        initCharts();
     });
+
+    function initCharts() {
+        if (typeof Chart === 'undefined') return;
+        var data = __chartsData || {};
+        var chartOpts = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { font: { size: 10 }, color: '#8a8a8a' },
+                    grid: { color: '#e8e4dc' }
+                },
+                x: {
+                    ticks: { font: { size: 10 }, color: '#8a8a8a', maxRotation: 45 },
+                    grid: { display: false }
+                }
+            }
+        };
+
+        // Bookings bar chart
+        var bookings = data.bookingsByDay || [];
+        var ctxBookings = document.getElementById('chartBookings');
+        if (ctxBookings && ctxBookings.getContext) {
+            new Chart(ctxBookings, {
+                type: 'bar',
+                data: {
+                    labels: bookings.map(function(b) { return b.label || ''; }),
+                    datasets: [{
+                        label: 'Bookings',
+                        data: bookings.map(function(b) { return b.value != null ? b.value : 0; }),
+                        backgroundColor: 'rgba(184, 122, 75, 0.6)',
+                        borderColor: '#b87a4b',
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOpts
+            });
+        }
+
+        // Revenue bar chart
+        var revenue = data.revenueByDay || [];
+        var ctxRevenue = document.getElementById('chartRevenue');
+        if (ctxRevenue && ctxRevenue.getContext) {
+            new Chart(ctxRevenue, {
+                type: 'bar',
+                data: {
+                    labels: revenue.map(function(r) { return r.label || ''; }),
+                    datasets: [{
+                        label: 'Revenue ($)',
+                        data: revenue.map(function(r) { return r.value != null ? r.value : 0; }),
+                        backgroundColor: 'rgba(61, 79, 61, 0.6)',
+                        borderColor: '#3d4f3d',
+                        borderWidth: 1
+                    }]
+                },
+                options: Object.assign({}, chartOpts, {
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    return '$' + (ctx.raw != null ? Number(ctx.raw).toFixed(2) : '0.00');
+                                }
+                            }
+                        }
+                    }
+                })
+            });
+        }
+
+        // Popular services doughnut chart
+        var services = data.popularServices || [];
+        var ctxServices = document.getElementById('chartServices');
+        if (ctxServices && ctxServices.getContext) {
+            var colors = ['#b87a4b', '#d4a574', '#3d4f3d', '#8a8a8a', '#5a5a5a', '#d4cec3', '#e8e4dc', '#2c2c2c'];
+            new Chart(ctxServices, {
+                type: 'doughnut',
+                data: {
+                    labels: services.map(function(s) { return (s.serviceName || 'Unknown').substring(0, 20); }),
+                    datasets: [{
+                        data: services.map(function(s) { return s.count != null ? s.count : 0; }),
+                        backgroundColor: colors.slice(0, services.length),
+                        borderWidth: 1,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 10 }, padding: 8 } }
+                    },
+                    cutout: '55%'
+                }
+            });
+        }
+    }
 
     // Format ISO date strings into readable dates
     document.querySelectorAll('time[data-iso]').forEach(function(el) {

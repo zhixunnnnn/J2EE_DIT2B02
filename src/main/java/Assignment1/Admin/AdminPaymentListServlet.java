@@ -72,8 +72,6 @@ public class AdminPaymentListServlet extends HttpServlet {
 				}
 
 				long totalAmountCents = 0;
-				long totalRefundedCents = 0;
-				int succeededCount = 0;
 				int totalCount = 0;
 
 				if (dataArr != null) {
@@ -82,9 +80,7 @@ public class AdminPaymentListServlet extends HttpServlet {
 						HashMap<String, String> map = new HashMap<>();
 
 						String piId = safeString(p, "paymentIntentId");
-						String amountStr = safeString(p, "amount");
-						long amount = 0;
-						try { amount = Long.parseLong(amountStr); } catch (Exception e) {}
+						long amount = parseAmount(p, "amount");
 						String currency = safeString(p, "currency");
 						String status = safeString(p, "status");
 						String createdAt = safeString(p, "createdAt");
@@ -94,7 +90,7 @@ public class AdminPaymentListServlet extends HttpServlet {
 						String description = safeString(p, "description");
 						String paymentId = safeString(p, "paymentId");
 
-						// Sum refunds if present
+						// Sum refunds if present (for display in table, not for stats card)
 						long refundedAmount = 0;
 						if (p.containsKey("refunds") && !p.isNull("refunds")
 								&& p.get("refunds").getValueType() == JsonValue.ValueType.ARRAY) {
@@ -123,25 +119,18 @@ public class AdminPaymentListServlet extends HttpServlet {
 						map.put("refundedAmount", String.valueOf(refundedAmount));
 						payments.add(map);
 						totalCount++;
-
-						if ("succeeded".equalsIgnoreCase(status)) {
-							succeededCount++;
-							totalAmountCents += amount;
-						}
-						totalRefundedCents += refundedAmount;
+						totalAmountCents += amount;
 					}
 				}
 
 				stats.put("totalPayments", String.valueOf(totalCount));
-				stats.put("succeededCount", String.valueOf(succeededCount));
 				stats.put("totalAmount", String.valueOf(totalAmountCents));
-				stats.put("totalRefunded", String.valueOf(totalRefundedCents));
-				long avg = succeededCount > 0 ? totalAmountCents / succeededCount : 0;
+				long avg = totalCount > 0 ? totalAmountCents / totalCount : 0;
 				stats.put("averagePaymentAmount", String.valueOf(avg));
 				stats.put("count", String.valueOf(payments.size()));
 
 				System.out.println("[AdminPayments] Loaded " + payments.size()
-						+ " payments, " + succeededCount + " succeeded");
+						+ " payments, total amount: $" + String.format("%.2f", totalAmountCents / 100.0));
 			}
 
 		} catch (Exception e) {
@@ -165,6 +154,16 @@ public class AdminPaymentListServlet extends HttpServlet {
 			case TRUE: return "true";
 			case FALSE: return "false";
 			default: return val.toString();
+		}
+	}
+
+	/** Parse amount from JSON (handles both integer and decimal, always in cents). */
+	private long parseAmount(JsonObject obj, String key) {
+		if (!obj.containsKey(key) || obj.isNull(key)) return 0L;
+		try {
+			return obj.getJsonNumber(key).longValue();
+		} catch (Exception e) {
+			return 0L;
 		}
 	}
 }

@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
@@ -35,6 +36,12 @@ public class AdminDashboardServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		HttpSession session = request.getSession(false);
+		if (session == null || !"admin".equals(String.valueOf(session.getAttribute("sessRole")))) {
+			response.sendRedirect(request.getContextPath() + "/login?errCode=NoSession");
+			return;
+		}
 
 		try {
 			Client client = ClientBuilder.newClient();
@@ -70,6 +77,13 @@ public class AdminDashboardServlet extends HttpServlet {
 						}
 					}
 					request.setAttribute("recentFeedback", feedbackList);
+
+					// Chart data - pass as JSON string for client-side Chart.js
+					if (data.containsKey("charts") && !data.isNull("charts")) {
+						request.setAttribute("chartsJson", data.getJsonObject("charts").toString());
+					} else {
+						request.setAttribute("chartsJson", "{}");
+					}
 				} else {
 					setDefaults(request);
 				}
@@ -92,5 +106,6 @@ public class AdminDashboardServlet extends HttpServlet {
 		request.setAttribute("totalFeedback", 0);
 		request.setAttribute("recentUsers", 0);
 		request.setAttribute("recentFeedback", new ArrayList<>());
+		request.setAttribute("chartsJson", "{}");
 	}
 }
