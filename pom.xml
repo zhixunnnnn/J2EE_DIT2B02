@@ -73,6 +73,18 @@
             <artifactId>libphonenumber</artifactId>
             <version>8.13.9</version>
         </dependency>
+
+        <!-- Jakarta RESTful Web Services (JAX-RS) Client API -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>3.1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>3.1.9</version>
+        </dependency>
     </dependencies>
 
     <build>
