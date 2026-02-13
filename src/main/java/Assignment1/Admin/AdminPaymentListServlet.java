@@ -13,9 +13,6 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,15 +23,13 @@ import jakarta.json.JsonReader;
 import jakarta.json.JsonValue;
 
 /**
- * Admin servlet for listing all payments by querying Stripe API directly.
- * Fetches PaymentIntents with expanded latest_charge to get billing details.
+ * Admin servlet for listing all payments via backend API.
  * URL: /admin/payments/list
  */
 @WebServlet("/admin/payments/list")
 public class AdminPaymentListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String STRIPE_API = "https://api.stripe.com/v1";
-	private static final String STRIPE_SECRET_KEY = System.getenv("STRIPE_SECRET_KEY");
+	private static final String BACKEND_API = "http://localhost:8081/api";
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -53,74 +48,69 @@ public class AdminPaymentListServlet extends HttpServlet {
 		Client client = ClientBuilder.newClient();
 
 		try {
-			// Fetch PaymentIntents from Stripe with expanded latest_charge
-			Response stripeResp = client
-					.target(STRIPE_API + "/payment_intents")
-					.queryParam("limit", "100")
-					.queryParam("expand[]", "data.latest_charge")
-					.request(MediaType.APPLICATION_JSON)
-					.header("Authorization", "Bearer " + STRIPE_SECRET_KEY)
-					.get();
+			Response apiResp = client.target(BACKEND_API + "/admin/payments")
+					.request(MediaType.APPLICATION_JSON).get();
 
-			String json = stripeResp.readEntity(String.class);
-			System.out.println("[AdminPayments] Stripe status: " + stripeResp.getStatus()
+			String json = apiResp.readEntity(String.class);
+			System.out.println("[AdminPayments] API status: " + apiResp.getStatus()
 					+ ", length: " + (json != null ? json.length() : 0));
 
-			if (stripeResp.getStatus() == 200 && json != null) {
+			if (apiResp.getStatus() == 200 && json != null && !json.isBlank()) {
 				JsonReader reader = Json.createReader(new StringReader(json));
-				JsonObject root = reader.readObject();
+				JsonValue root = reader.read();
 				reader.close();
 
-				JsonArray dataArr = root.getJsonArray("data");
+				JsonArray dataArr = null;
+				if (root.getValueType() == JsonValue.ValueType.ARRAY) {
+					dataArr = root.asJsonArray();
+				} else if (root.getValueType() == JsonValue.ValueType.OBJECT) {
+					JsonObject obj = root.asJsonObject();
+					if (obj.containsKey("data") && !obj.isNull("data")
+							&& obj.get("data").getValueType() == JsonValue.ValueType.ARRAY) {
+						dataArr = obj.getJsonArray("data");
+					}
+				}
 
 				long totalAmountCents = 0;
 				long totalRefundedCents = 0;
 				int succeededCount = 0;
-
-				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-						.withZone(ZoneId.of("UTC"));
+				int totalCount = 0;
 
 				if (dataArr != null) {
 					for (int i = 0; i < dataArr.size(); i++) {
-						JsonObject pi = dataArr.getJsonObject(i);
+						JsonObject p = dataArr.getJsonObject(i);
 						HashMap<String, String> map = new HashMap<>();
 
-						String piId = safeString(pi, "id");
-						long amount = pi.containsKey("amount") ? pi.getJsonNumber("amount").longValue() : 0;
-						long amountReceived = pi.containsKey("amount_received") ? pi.getJsonNumber("amount_received").longValue() : 0;
-						String currency = safeString(pi, "currency");
-						String status = safeString(pi, "status");
-						String description = safeString(pi, "description");
-						long created = pi.containsKey("created") ? pi.getJsonNumber("created").longValue() : 0;
+						String piId = safeString(p, "paymentIntentId");
+						String amountStr = safeString(p, "amount");
+						long amount = 0;
+						try { amount = Long.parseLong(amountStr); } catch (Exception e) {}
+						String currency = safeString(p, "currency");
+						String status = safeString(p, "status");
+						String createdAt = safeString(p, "createdAt");
+						String customerName = safeString(p, "customerName");
+						String customerEmail = safeString(p, "customerEmail");
+						String bookingId = safeString(p, "bookingId");
+						String description = safeString(p, "description");
+						String paymentId = safeString(p, "paymentId");
 
-						// Get billing details from expanded latest_charge
-						String customerName = "";
-						String customerEmail = "";
+						// Sum refunds if present
 						long refundedAmount = 0;
-						if (pi.containsKey("latest_charge") && !pi.isNull("latest_charge")) {
-							JsonValue lcVal = pi.get("latest_charge");
-							if (lcVal.getValueType() == JsonValue.ValueType.OBJECT) {
-								JsonObject charge = lcVal.asJsonObject();
-								if (charge.containsKey("billing_details") && !charge.isNull("billing_details")) {
-									JsonObject bd = charge.getJsonObject("billing_details");
-									customerName = safeString(bd, "name");
-									customerEmail = safeString(bd, "email");
+						if (p.containsKey("refunds") && !p.isNull("refunds")
+								&& p.get("refunds").getValueType() == JsonValue.ValueType.ARRAY) {
+							JsonArray refunds = p.getJsonArray("refunds");
+							for (int j = 0; j < refunds.size(); j++) {
+								JsonObject r = refunds.getJsonObject(j);
+								if (r.containsKey("amount") && !r.isNull("amount")) {
+									refundedAmount += r.getJsonNumber("amount").longValue();
 								}
-								refundedAmount = charge.containsKey("amount_refunded")
-										? charge.getJsonNumber("amount_refunded").longValue() : 0;
 							}
 						}
-
-						// Get bookingId from metadata
-						String bookingId = "";
-						if (pi.containsKey("metadata") && !pi.isNull("metadata")) {
-							JsonObject meta = pi.getJsonObject("metadata");
-							bookingId = safeString(meta, "bookingId");
+						if (refundedAmount == 0 && p.containsKey("amountRefunded") && !p.isNull("amountRefunded")) {
+							try { refundedAmount = p.getJsonNumber("amountRefunded").longValue(); } catch (Exception e) {}
 						}
 
-						String createdAt = created > 0
-								? dtf.format(Instant.ofEpochSecond(created)) : "";
-
+						map.put("paymentId", paymentId);
 						map.put("paymentIntentId", piId);
 						map.put("amount", String.valueOf(amount));
 						map.put("currency", currency.toUpperCase());
@@ -132,18 +122,18 @@ public class AdminPaymentListServlet extends HttpServlet {
 						map.put("description", description);
 						map.put("refundedAmount", String.valueOf(refundedAmount));
 						payments.add(map);
+						totalCount++;
 
-						// Accumulate stats
-						if ("succeeded".equals(status)) {
+						if ("succeeded".equalsIgnoreCase(status)) {
 							succeededCount++;
-							totalAmountCents += amountReceived > 0 ? amountReceived : amount;
+							totalAmountCents += amount;
 						}
 						totalRefundedCents += refundedAmount;
 					}
 				}
 
-				// Compute stats
-				stats.put("totalPayments", String.valueOf(succeededCount));
+				stats.put("totalPayments", String.valueOf(totalCount));
+				stats.put("succeededCount", String.valueOf(succeededCount));
 				stats.put("totalAmount", String.valueOf(totalAmountCents));
 				stats.put("totalRefunded", String.valueOf(totalRefundedCents));
 				long avg = succeededCount > 0 ? totalAmountCents / succeededCount : 0;
@@ -151,7 +141,7 @@ public class AdminPaymentListServlet extends HttpServlet {
 				stats.put("count", String.valueOf(payments.size()));
 
 				System.out.println("[AdminPayments] Loaded " + payments.size()
-						+ " payment intents, " + succeededCount + " succeeded");
+						+ " payments, " + succeededCount + " succeeded");
 			}
 
 		} catch (Exception e) {

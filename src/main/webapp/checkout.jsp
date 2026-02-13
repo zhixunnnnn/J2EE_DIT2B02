@@ -377,6 +377,15 @@
                     submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                     buttonText.textContent = 'Pay $<%= String.format("%.2f", totalAmount) %>';
                 } else if (paymentIntent.status === 'succeeded') {
+                    // Update payment status in backend DB (fallback if webhook is delayed)
+                    try {
+                        await fetch(BACKEND_URL + '/payments/' + paymentIntentId + '/status', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ status: 'succeeded' })
+                        });
+                    } catch (e) { console.warn('[Payment] Status update fallback failed:', e); }
+
                     await completeBooking(paymentIntentId);
                     showMessage('Payment successful! Redirecting...', 'success');
                     buttonText.textContent = 'Payment Complete';

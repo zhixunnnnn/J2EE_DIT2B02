@@ -78,6 +78,9 @@ public class BookingServlet extends HttpServlet {
 				if (arr != null) {
 					for (int i = 0; i < arr.size(); i++) {
 						JsonObject b = arr.getJsonObject(i);
+						System.out.println("[BookingServlet] Booking JSON keys: " + b.keySet()
+								+ " | bookingDetails present: " + b.containsKey("bookingDetails")
+								+ " | raw: " + b.toString().substring(0, Math.min(500, b.toString().length())));
 						Booking booking = new Booking();
 
 						booking.setBookingId(b.containsKey("bookingId") && !b.isNull("bookingId")
@@ -102,7 +105,7 @@ public class BookingServlet extends HttpServlet {
 							}
 						}
 
-						// Parse bookingDetails
+						// Parse bookingDetails — try nested array first
 						if (b.containsKey("bookingDetails") && !b.isNull("bookingDetails")
 								&& b.get("bookingDetails").getValueType() == JsonValue.ValueType.ARRAY) {
 							JsonArray detailsArr = b.getJsonArray("bookingDetails");
@@ -118,6 +121,26 @@ public class BookingServlet extends HttpServlet {
 								details.add(new BookingDetail(serviceId, serviceName, quantity, unitPrice));
 							}
 							booking.setBookingDetails(details);
+						}
+
+						// Fallback: flat DTO fields (serviceName, price, quantity, serviceId)
+						if (booking.getBookingDetails().isEmpty()) {
+							String flatServiceName = safeString(b, "serviceName");
+							if (!flatServiceName.isEmpty()) {
+								int serviceId = b.containsKey("serviceId") && !b.isNull("serviceId")
+										? b.getInt("serviceId") : 0;
+								int quantity = b.containsKey("quantity") && !b.isNull("quantity")
+										? b.getInt("quantity") : 1;
+								BigDecimal unitPrice = BigDecimal.ZERO;
+								if (b.containsKey("price") && !b.isNull("price")) {
+									unitPrice = b.getJsonNumber("price").bigDecimalValue();
+								} else if (b.containsKey("unitPrice") && !b.isNull("unitPrice")) {
+									unitPrice = b.getJsonNumber("unitPrice").bigDecimalValue();
+								}
+								ArrayList<BookingDetail> details = new ArrayList<>();
+								details.add(new BookingDetail(serviceId, flatServiceName, quantity, unitPrice));
+								booking.setBookingDetails(details);
+							}
 						}
 
 						bookings.add(booking);

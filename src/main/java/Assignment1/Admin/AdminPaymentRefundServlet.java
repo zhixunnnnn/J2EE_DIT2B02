@@ -14,20 +14,21 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 
 /**
- * Admin servlet for refunding payments via Stripe API directly.
+ * Admin servlet for refunding payments via backend API.
  * URL: /admin/payments/refund
  */
 @WebServlet("/admin/payments/refund")
 public class AdminPaymentRefundServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String STRIPE_API = "https://api.stripe.com/v1";
-	private static final String STRIPE_SECRET_KEY = System.getenv("STRIPE_SECRET_KEY");
+	private static final String BACKEND_API = "http://localhost:8081/api";
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -54,27 +55,24 @@ public class AdminPaymentRefundServlet extends HttpServlet {
 
 		Client client = ClientBuilder.newClient();
 		try {
-			// Build form body for Stripe refund API
-			StringBuilder formBody = new StringBuilder();
-			formBody.append("payment_intent=").append(paymentIntentId);
+			Map<String, Object> refundData = new HashMap<>();
+			refundData.put("paymentIntentId", paymentIntentId);
 			if (amountStr != null && !amountStr.isBlank()) {
-				formBody.append("&amount=").append(amountStr.trim());
+				try { refundData.put("amount", Long.parseLong(amountStr.trim())); } catch (Exception e) {}
 			}
 			if (reason != null && !reason.isBlank()) {
-				formBody.append("&reason=").append(reason.trim());
+				refundData.put("reason", reason.trim());
 			}
 
-			Response stripeResp = client.target(STRIPE_API + "/refunds")
+			Response apiResp = client.target(BACKEND_API + "/payments/refund")
 					.request(MediaType.APPLICATION_JSON)
-					.header("Authorization", "Bearer " + STRIPE_SECRET_KEY)
-					.post(Entity.entity(formBody.toString(),
-							MediaType.APPLICATION_FORM_URLENCODED));
+					.post(Entity.json(refundData));
 
-			String respBody = stripeResp.readEntity(String.class);
-			System.out.println("[AdminRefund] Stripe status: " + stripeResp.getStatus()
+			String respBody = apiResp.readEntity(String.class);
+			System.out.println("[AdminRefund] API status: " + apiResp.getStatus()
 					+ ", response: " + respBody);
 
-			if (stripeResp.getStatus() == 200) {
+			if (apiResp.getStatus() == 200) {
 				session.setAttribute("flashSuccess", "Refund processed successfully.");
 			} else {
 				String msg = "Refund failed.";
@@ -82,11 +80,10 @@ public class AdminPaymentRefundServlet extends HttpServlet {
 					JsonReader reader = Json.createReader(new StringReader(respBody));
 					JsonObject obj = reader.readObject();
 					reader.close();
-					if (obj.containsKey("error") && !obj.isNull("error")) {
-						JsonObject err = obj.getJsonObject("error");
-						if (err.containsKey("message")) {
-							msg = err.getString("message");
-						}
+					if (obj.containsKey("message") && !obj.isNull("message")) {
+						msg = obj.getString("message");
+					} else if (obj.containsKey("error") && !obj.isNull("error")) {
+						msg = obj.getString("error");
 					}
 				} catch (Exception ignore) {}
 				session.setAttribute("flashError", msg);

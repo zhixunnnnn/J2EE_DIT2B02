@@ -234,6 +234,7 @@
                         <option value="processing">Processing</option>
                         <option value="failed">Failed</option>
                         <option value="canceled">Canceled</option>
+                        <option value="requires_payment_method">Requires payment method</option>
                     </select>
                 </div>
             </div>
@@ -287,10 +288,13 @@
                                         statusClass = "bg-forest/10 text-forest border border-forest/20";
                                     } else if ("pending".equalsIgnoreCase(pmStatus) || "processing".equalsIgnoreCase(pmStatus)) {
                                         statusClass = "bg-copper/10 text-copper border border-copper/20";
+                                    } else if (pmStatus != null && pmStatus.toLowerCase().startsWith("requires_")) {
+                                        statusClass = "bg-copper/10 text-copper border border-copper/20";
                                     } else if ("failed".equalsIgnoreCase(pmStatus) || "canceled".equalsIgnoreCase(pmStatus)) {
                                         statusClass = "bg-stone-deep text-ink-muted";
                                     }
 
+                                    String statusDisplay = pmStatus != null ? pmStatus.replace("_", " ") : "—";
                                     String shortRef = piId != null && piId.length() > 16 ? "..." + piId.substring(piId.length() - 12) : (piId != null ? piId : "—");
                                     String searchStr = ((pmName != null ? pmName : "") + " " + (pmEmail != null ? pmEmail : "") + " " + (piId != null ? piId : "")).toLowerCase();
                                 %>
@@ -312,7 +316,7 @@
                                     <td class="py-4 px-4 text-sm font-medium text-ink text-mono">$<%= amountFmt %></td>
                                     <td class="py-4 px-4">
                                         <span class="inline-flex items-center px-2.5 py-1 text-xs capitalize <%= statusClass %>">
-                                            <%= pmStatus != null ? pmStatus : "—" %>
+                                            <%= statusDisplay %>
                                         </span>
                                     </td>
                                     <td class="py-4 px-4 text-right">
@@ -325,6 +329,14 @@
                                                 </svg>
                                                 Refund
                                             </button>
+                                            <% } else if ("requires_payment_method".equalsIgnoreCase(pmStatus) || "requires_confirmation".equalsIgnoreCase(pmStatus) || "requires_action".equalsIgnoreCase(pmStatus) || "processing".equalsIgnoreCase(pmStatus)) { %>
+                                            <span class="text-xs text-ink-muted italic">Incomplete</span>
+                                            <% } else if ("canceled".equalsIgnoreCase(pmStatus)) { %>
+                                            <span class="text-xs text-ink-muted italic">Canceled</span>
+                                            <% } else if ("failed".equalsIgnoreCase(pmStatus)) { %>
+                                            <span class="text-xs text-ink-muted italic">Failed</span>
+                                            <% } else { %>
+                                            <span class="text-xs text-ink-muted italic">—</span>
                                             <% } %>
                                         </div>
                                     </td>
@@ -356,10 +368,13 @@
                         statusClass = "bg-forest/10 text-forest border border-forest/20";
                     } else if ("pending".equalsIgnoreCase(pmStatus) || "processing".equalsIgnoreCase(pmStatus)) {
                         statusClass = "bg-copper/10 text-copper border border-copper/20";
+                    } else if (pmStatus != null && pmStatus.toLowerCase().startsWith("requires_")) {
+                        statusClass = "bg-copper/10 text-copper border border-copper/20";
                     } else if ("failed".equalsIgnoreCase(pmStatus) || "canceled".equalsIgnoreCase(pmStatus)) {
                         statusClass = "bg-stone-deep text-ink-muted";
                     }
 
+                    String mStatusDisplay = pmStatus != null ? pmStatus.replace("_", " ") : "—";
                     String shortRef = piId != null && piId.length() > 20 ? "..." + piId.substring(piId.length() - 16) : (piId != null ? piId : "—");
                     String searchStr = ((pmName != null ? pmName : "") + " " + (pmEmail != null ? pmEmail : "") + " " + (piId != null ? piId : "")).toLowerCase();
                 %>
@@ -372,7 +387,7 @@
                             <p class="text-xs text-ink-muted"><%= pmEmail != null && !pmEmail.isEmpty() ? pmEmail : "" %></p>
                         </div>
                         <span class="inline-flex items-center px-2.5 py-1 text-xs capitalize <%= statusClass %>">
-                            <%= pmStatus != null ? pmStatus : "—" %>
+                            <%= mStatusDisplay %>
                         </span>
                     </div>
                     <p class="font-serif text-2xl font-medium text-ink text-mono mb-1">$<%= amountFmt %></p>
@@ -474,7 +489,7 @@
         var iso = el.getAttribute('data-iso');
         if (!iso) return;
         try {
-            var d = new Date(iso);
+            var d = new Date(iso.match(/[Z+\-]\d|[Z]$/) ? iso : iso + 'Z');
             if (isNaN(d.getTime())) return;
             var now = new Date();
             var diff = now - d;
