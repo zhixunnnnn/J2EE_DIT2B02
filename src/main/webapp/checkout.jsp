@@ -69,6 +69,11 @@
                 totalAmount += item.getLineTotal();
             }
         }
+        
+        // GST calculation (9%)
+        double gstRate = 0.09;
+        double gstAmount = totalAmount * gstRate;
+        double grandTotal = totalAmount + gstAmount;
     %>
 </head>
 
@@ -127,7 +132,7 @@
 
                         <button type="submit" id="submit-btn"
                                 class="w-full bg-ink text-stone-warm px-6 py-4 text-sm font-normal hover:bg-ink-light transition-colors flex items-center justify-center gap-2 mt-6">
-                            <span id="button-text">Pay $<%= String.format("%.2f", totalAmount) %></span>
+                            <span id="button-text">Pay $<%= String.format("%.2f", grandTotal) %></span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                             </svg>
@@ -180,12 +185,12 @@
                             <span>$<%= String.format("%.2f", totalAmount) %></span>
                         </div>
                         <div class="flex justify-between text-sm text-ink-light mb-2">
-                            <span>Tax</span>
-                            <span>$0.00</span>
+                            <span>GST (9%)</span>
+                            <span>$<%= String.format("%.2f", gstAmount) %></span>
                         </div>
                         <div class="flex justify-between font-medium text-ink mt-4 pt-4 border-t border-stone-mid">
                             <span class="font-serif text-lg">Total</span>
-                            <span class="font-serif text-xl" id="total-display">$<%= String.format("%.2f", totalAmount) %></span>
+                            <span class="font-serif text-xl" id="total-display">$<%= String.format("%.2f", grandTotal) %></span>
                         </div>
                     </div>
 
@@ -224,7 +229,7 @@
         const BACKEND_URL = 'http://localhost:8081/api';
         const FRONTEND_URL = '<%=request.getContextPath()%>';
         const USER_ID = '<%= userId %>';
-        const TOTAL_AMOUNT = <%= (int)(totalAmount * 100) %>;
+        const TOTAL_AMOUNT = <%= (int)(grandTotal * 100) %>;
         
         let stripe;
         let elements;
@@ -375,7 +380,7 @@
                     showMessage(error.message, 'error');
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    buttonText.textContent = 'Pay $<%= String.format("%.2f", totalAmount) %>';
+                    buttonText.textContent = 'Pay $<%= String.format("%.2f", grandTotal) %>';
                 } else if (paymentIntent.status === 'succeeded') {
                     // Update payment status in backend DB (fallback if webhook is delayed)
                     try {
@@ -397,14 +402,14 @@
                     showMessage('Payment status: ' + paymentIntent.status, 'warning');
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    buttonText.textContent = 'Pay $<%= String.format("%.2f", totalAmount) %>';
+                    buttonText.textContent = 'Pay $<%= String.format("%.2f", grandTotal) %>';
                 }
             } catch (error) {
                 console.error('[Payment] Error:', error);
                 loading.classList.add('hidden');
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                buttonText.textContent = 'Pay $<%= String.format("%.2f", totalAmount) %>';
+                buttonText.textContent = 'Pay $<%= String.format("%.2f", grandTotal) %>';
                 showMessage('An error occurred. Please try again.', 'error');
             }
         });

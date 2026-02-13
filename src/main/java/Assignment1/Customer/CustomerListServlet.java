@@ -84,6 +84,20 @@ public class CustomerListServlet extends HttpServlet {
                 session.setAttribute("sessName", user.getName());
                 session.setAttribute("sessCustomerId", user.getCustomerId());
 
+                // Handle "Remember Me" cookie
+                String rememberMe = request.getParameter("rememberMe");
+                if ("true".equals(rememberMe)) {
+                    Cookie emailCookie = new Cookie("rememberedEmail", email);
+                    emailCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
+                    emailCookie.setPath("/");
+                    response.addCookie(emailCookie);
+                } else {
+                    Cookie emailCookie = new Cookie("rememberedEmail", "");
+                    emailCookie.setMaxAge(0); // Delete cookie
+                    emailCookie.setPath("/");
+                    response.addCookie(emailCookie);
+                }
+
                 response.sendRedirect(request.getContextPath() + "/customersServlet?action=retrieveUser");
             } else {
                 response.sendRedirect(request.getContextPath() + "/login?errCode=invalidLogin");
@@ -115,9 +129,9 @@ public class CustomerListServlet extends HttpServlet {
             c.setState(request.getParameter("state"));
             c.setAddressLine2(request.getParameter("address_line2"));
 
-            Integer result = ApiClient.post("/customers/register", c, Integer.class);
+            int statusCode = ApiClient.post("/customers/register", c);
 
-            if (result != null && result > 0) {
+            if (statusCode == 200 || statusCode == 201) {
                 response.sendRedirect(request.getContextPath() + "/login?msgCode=RegisterSuccess");
             } else {
                 response.sendRedirect(request.getContextPath() + "/register?errCode=RegisterFail");
@@ -253,6 +267,7 @@ public class CustomerListServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
 
+        // Note: rememberedEmail cookie is intentionally kept so email is pre-filled on next visit
         response.sendRedirect(request.getContextPath() + "/login");
     }
 }

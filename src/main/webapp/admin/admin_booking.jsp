@@ -104,6 +104,22 @@
     .status-pending { background: #fff3cd; color: #856404; }
     .status-completed { background: #d1ecf1; color: #0c5460; }
     .status-cancelled { background: #f8d7da; color: #721c24; }
+
+    .items-list { list-style: none; margin: 0; padding: 0; }
+    .items-list li {
+        display: flex; align-items: baseline; justify-content: space-between;
+        padding: 4px 0; border-bottom: 1px dashed #e8e4dc;
+    }
+    .items-list li:last-child { border-bottom: none; }
+    .item-name { flex: 1; }
+    .item-qty { width: 40px; text-align: center; color: #8a8a8a; font-size: 0.75rem; }
+    .item-price { width: 80px; text-align: right; font-variant-numeric: tabular-nums; }
+
+    .booking-row { cursor: pointer; }
+    .booking-row .expand-icon { transition: transform 0.2s ease; display: inline-block; }
+    .booking-row.expanded .expand-icon { transform: rotate(90deg); }
+    .detail-row { display: none; }
+    .detail-row.show { display: table-row; }
     </style>
 </head>
 
@@ -134,7 +150,7 @@
             </header>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
                 <div class="bg-white border border-stone-mid p-4">
                     <p class="text-xs uppercase tracking-wide text-ink-muted mb-2">Total Bookings</p>
                     <p class="font-serif text-3xl font-medium text-ink">
@@ -142,6 +158,18 @@
                             <c:when test="${not empty bookings}">${bookings.size()}</c:when>
                             <c:otherwise>0</c:otherwise>
                         </c:choose>
+                    </p>
+                </div>
+                <div class="bg-white border border-stone-mid p-4">
+                    <p class="text-xs uppercase tracking-wide text-ink-muted mb-2">Total Items</p>
+                    <p class="font-serif text-3xl font-medium text-ink">
+                        <c:set var="totalItems" value="0"/>
+                        <c:forEach var="b" items="${bookings}">
+                            <c:if test="${not empty b.items}">
+                                <c:set var="totalItems" value="${totalItems + b.items.size()}"/>
+                            </c:if>
+                        </c:forEach>
+                        ${totalItems}
                     </p>
                 </div>
                 <div class="bg-white border border-stone-mid p-4">
@@ -189,35 +217,59 @@
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="data-table">
+                    <table class="data-table" id="bookingsTable">
                         <thead>
                             <tr>
+                                <th style="width:40px;"></th>
                                 <th>Booking ID</th>
                                 <th>Customer</th>
-                                <th>Email</th>
-                                <th>Service</th>
+                                <th>Services</th>
                                 <th>Scheduled Date</th>
+                                <th>Total</th>
                                 <th>Status</th>
                                 <th class="text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="b" items="${bookings}">
-                                <tr>
+                            <c:forEach var="b" items="${bookings}" varStatus="loop">
+                                <tr class="booking-row" onclick="toggleDetail(${loop.index})" id="row-${loop.index}">
                                     <td>
-                                        <span class="font-medium text-sm">${b.bookingId}</span>
+                                        <span class="expand-icon text-ink-muted">&#9654;</span>
                                     </td>
                                     <td>
-                                        <span class="text-ink font-medium">${b.customerName}</span>
+                                        <span class="font-medium text-sm">#${b.bookingId}</span>
                                     </td>
                                     <td>
-                                        <span class="text-ink-light text-sm">${b.customerEmail}</span>
+                                        <div>
+                                            <span class="text-ink font-medium">${b.customerName}</span>
+                                            <p class="text-ink-muted text-xs mt-0.5">${b.customerEmail}</p>
+                                        </div>
                                     </td>
                                     <td>
-                                        <span class="text-ink">${b.serviceName}</span>
+                                        <c:choose>
+                                            <c:when test="${not empty b.items}">
+                                                <c:choose>
+                                                    <c:when test="${b.items.size() == 1}">
+                                                        <span class="text-ink text-sm">${b.items.get(0).serviceName}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-ink text-sm">${b.items.get(0).serviceName}</span>
+                                                        <span class="text-ink-muted text-xs ml-1">+${b.items.size() - 1} more</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="text-ink-muted text-sm">No services</span>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                     <td>
-                                        <span class="text-ink-light">${b.bookingDate}</span>
+                                        <span class="text-ink-light text-sm">${b.bookingDate}</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-ink font-medium text-sm">
+                                            $<c:out value="${String.format('%.2f', b.totalAmount)}"/>
+                                        </span>
                                     </td>
                                     <td>
                                         <c:choose>
@@ -238,8 +290,9 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td class="text-right">
-                                        <form method="post" action="${pageContext.request.contextPath}/admin/bookings/delete" class="inline">
+                                    <td class="text-right" onclick="event.stopPropagation()">
+                                        <form method="post" action="${pageContext.request.contextPath}/admin/bookings/delete" class="inline"
+                                              onsubmit="return confirm('Delete booking #${b.bookingId} and all its items?');">
                                             <input type="hidden" name="bookingId" value="${b.bookingId}">
                                             <button type="submit" class="text-xs px-3 py-1.5 border border-stone-mid text-ink-muted hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-colors">
                                                 Delete
@@ -247,11 +300,60 @@
                                         </form>
                                     </td>
                                 </tr>
+                                <!-- Expandable cart detail row -->
+                                <tr class="detail-row" id="detail-${loop.index}">
+                                    <td colspan="8" style="padding: 0;">
+                                        <div class="bg-stone-warm px-6 py-4 border-l-2 border-copper ml-4">
+                                            <p class="text-xs uppercase tracking-[0.15em] text-ink-muted mb-3">Cart Items (Booking #${b.bookingId})</p>
+                                            <c:choose>
+                                                <c:when test="${not empty b.items}">
+                                                    <table class="w-full text-sm">
+                                                        <thead>
+                                                            <tr class="text-xs uppercase tracking-wide text-ink-muted">
+                                                                <th class="text-left pb-2 font-medium">Service</th>
+                                                                <th class="text-center pb-2 font-medium" style="width:60px;">Qty</th>
+                                                                <th class="text-right pb-2 font-medium" style="width:100px;">Unit Price</th>
+                                                                <th class="text-right pb-2 font-medium" style="width:100px;">Subtotal</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <c:forEach var="item" items="${b.items}">
+                                                                <tr class="border-b border-stone-mid">
+                                                                    <td class="py-2 text-ink">${item.serviceName}</td>
+                                                                    <td class="py-2 text-center text-ink-light">&times;${item.quantity}</td>
+                                                                    <td class="py-2 text-right text-ink-light">$${item.unitPrice}</td>
+                                                                    <td class="py-2 text-right text-ink font-medium">$${item.lineTotal}</td>
+                                                                </tr>
+                                                            </c:forEach>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="3" class="pt-3 text-right text-xs uppercase tracking-wide text-ink-muted font-medium">Total</td>
+                                                                <td class="pt-3 text-right text-ink font-medium">
+                                                                    $<c:out value="${String.format('%.2f', b.totalAmount)}"/>
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <p class="text-ink-muted text-sm">No service items in this booking</p>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:if test="${not empty b.notes}">
+                                                <div class="mt-3 pt-3 border-t border-stone-mid">
+                                                    <p class="text-xs text-ink-muted uppercase tracking-wide mb-1">Notes</p>
+                                                    <p class="text-sm text-ink-light">${b.notes}</p>
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                    </td>
+                                </tr>
                             </c:forEach>
 
                             <c:if test="${empty bookings}">
                                 <tr>
-                                    <td colspan="7" class="text-center py-12">
+                                    <td colspan="8" class="text-center py-12">
                                         <svg class="w-10 h-10 text-stone-deep mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
@@ -278,6 +380,18 @@
             document.getElementById('pageContent').classList.add('visible');
         }, 500);
     });
+
+    function toggleDetail(idx) {
+        const row = document.getElementById('row-' + idx);
+        const detail = document.getElementById('detail-' + idx);
+        if (detail.classList.contains('show')) {
+            detail.classList.remove('show');
+            row.classList.remove('expanded');
+        } else {
+            detail.classList.add('show');
+            row.classList.add('expanded');
+        }
+    }
     </script>
 </body>
 </html>

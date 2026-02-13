@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -43,7 +44,7 @@ public class AdminBookingServlet extends HttpServlet {
             return;
         }
 
-        ArrayList<HashMap<String, String>> bookings = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> bookings = new ArrayList<>();
 
         try {
             Client client = ClientBuilder.newClient();
@@ -58,26 +59,55 @@ public class AdminBookingServlet extends HttpServlet {
 
                 if (root.getBoolean("success", false) && !root.isNull("data")) {
                     JsonArray dataArr = root.getJsonArray("data");
+
+                    // Group rows by bookingId (API returns one row per service item)
+                    LinkedHashMap<String, HashMap<String, Object>> grouped = new LinkedHashMap<>();
+
                     for (int i = 0; i < dataArr.size(); i++) {
                         JsonObject b = dataArr.getJsonObject(i);
-                        HashMap<String, String> map = new HashMap<>();
+                        String bookingId = String.valueOf(b.getInt("bookingId", 0));
 
-                        // Basic booking fields
-                        map.put("bookingId", String.valueOf(b.getInt("bookingId", 0)));
-                        map.put("serviceName", b.getString("serviceName", ""));
-                        map.put("customerName", b.getString("customerName", ""));
-                        map.put("customerEmail", b.getString("customerEmail", ""));
-                        // scheduledAt from DTO → format as bookingDate for JSP
-                        String scheduledAt = b.getString("scheduledAt", "");
-                        if (scheduledAt != null && !scheduledAt.isEmpty()) {
-                            // Format timestamp: 2026-02-12T14:30:00 → 2026-02-12 14:30
-                            scheduledAt = scheduledAt.replace("T", " ").substring(0, Math.min(16, scheduledAt.length()));
+                        HashMap<String, Object> map = grouped.get(bookingId);
+                        if (map == null) {
+                            map = new HashMap<>();
+                            map.put("bookingId", bookingId);
+                            map.put("customerName", b.getString("customerName", ""));
+                            map.put("customerEmail", b.getString("customerEmail", ""));
+                            map.put("status", b.getString("status", ""));
+                            map.put("notes", b.getString("notes", ""));
+
+                            String scheduledAt = b.getString("scheduledAt", "");
+                            if (scheduledAt != null && !scheduledAt.isEmpty()) {
+                                scheduledAt = scheduledAt.replace("T", " ").substring(0, Math.min(16, scheduledAt.length()));
+                            }
+                            map.put("bookingDate", scheduledAt);
+
+                            map.put("items", new ArrayList<HashMap<String, String>>());
+                            map.put("totalAmount", 0.0);
+                            grouped.put(bookingId, map);
                         }
-                        map.put("bookingDate", scheduledAt);
-                        map.put("status", b.getString("status", ""));
 
-                        bookings.add(map);
+                        // Add this service item
+                        String serviceName = b.getString("serviceName", "");
+                        if (serviceName != null && !serviceName.isEmpty()) {
+                            HashMap<String, String> item = new HashMap<>();
+                            item.put("serviceName", serviceName);
+                            item.put("quantity", String.valueOf(b.getInt("quantity", 1)));
+                            double unitPrice = b.getJsonNumber("unitPrice") != null ? b.getJsonNumber("unitPrice").doubleValue() : 0.0;
+                            item.put("unitPrice", String.format("%.2f", unitPrice));
+                            double lineTotal = unitPrice * b.getInt("quantity", 1);
+                            item.put("lineTotal", String.format("%.2f", lineTotal));
+
+                            @SuppressWarnings("unchecked")
+                            ArrayList<HashMap<String, String>> items = (ArrayList<HashMap<String, String>>) map.get("items");
+                            items.add(item);
+
+                            double total = (Double) map.get("totalAmount");
+                            map.put("totalAmount", total + lineTotal);
+                        }
                     }
+
+                    bookings.addAll(grouped.values());
                 }
             }
             client.close();

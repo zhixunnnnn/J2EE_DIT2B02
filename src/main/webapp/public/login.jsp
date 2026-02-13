@@ -34,6 +34,17 @@ if (loginSession != null && loginSession.getAttribute("sessRole") != null) {
     return;
 }
 
+// Read "Remember Me" cookie
+String rememberedEmail = "";
+Cookie[] cookies = request.getCookies();
+if (cookies != null) {
+    for (Cookie c : cookies) {
+        if ("rememberedEmail".equals(c.getName())) {
+            rememberedEmail = c.getValue();
+            break;
+        }
+    }
+}
 %>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -190,6 +201,7 @@ body { -webkit-font-smoothing: antialiased; }
 								</label>
 								<input type="text" id="email" name="email"
 									autocomplete="email"
+									value="<%= rememberedEmail %>"
 									class="w-full border border-stone-mid bg-stone-warm
 									       px-4 py-3 text-sm text-ink
 									       placeholder:text-ink-muted
@@ -212,6 +224,15 @@ body { -webkit-font-smoothing: antialiased; }
 									       focus:border-ink
 									       transition-colors duration-200"
 									placeholder="Enter your password">
+							</div>
+
+							<div class="flex items-center gap-2">
+								<input type="checkbox" id="rememberMe" name="rememberMe" value="true"
+									<%= !rememberedEmail.isEmpty() ? "checked" : "" %>
+									class="w-4 h-4 border border-stone-mid accent-ink cursor-pointer">
+								<label for="rememberMe" class="text-sm text-ink-muted cursor-pointer select-none">
+									Remember my email
+								</label>
 							</div>
 
 							<%
