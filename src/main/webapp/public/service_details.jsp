@@ -71,7 +71,7 @@
             <div class="grid md:grid-cols-[1.1fr_1.3fr]">
                 <!-- Image -->
                 <div class="relative h-56 md:h-full overflow-hidden bg-stone-mid">
-                    <img src="<%= request.getContextPath() %>/<%= s.getImagePath() %>"
+                    <img src="<%= (s.getImagePath() != null && s.getImagePath().startsWith("http")) ? s.getImagePath() : request.getContextPath() + "/" + (s.getImagePath() != null && !s.getImagePath().isEmpty() ? s.getImagePath() : "images/default-service.png") %>"
                          alt="<%= s.getServiceName() %>"
                          class="w-full h-full object-cover" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none"></div>

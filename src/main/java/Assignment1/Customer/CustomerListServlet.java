@@ -200,6 +200,7 @@ public class CustomerListServlet extends HttpServlet {
             c.setEmergencyContactPhone(request.getParameter("emergency_contact_phone"));
             c.setMedicalNotes(request.getParameter("medical_notes"));
             c.setCarePreferences(request.getParameter("care_preferences"));
+            c.setProfileImagePath(request.getParameter("profile_image_path"));
 
             int status = ApiClient.put("/customers/" + userId, c);
 

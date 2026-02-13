@@ -213,7 +213,7 @@ body { -webkit-font-smoothing: antialiased; }
 
                     <!-- Image -->
                     <div class="relative h-48 overflow-hidden bg-stone-mid">
-                        <img src="<%= request.getContextPath() %>/<%= s.getImagePath() %>"
+                        <img src="<%= (s.getImagePath() != null && s.getImagePath().startsWith("http")) ? s.getImagePath() : request.getContextPath() + "/" + (s.getImagePath() != null && !s.getImagePath().isEmpty() ? s.getImagePath() : "images/default-service.png") %>"
                              alt="<%= s.getServiceName() %>"
                              class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-ink/40 to-transparent"></div>

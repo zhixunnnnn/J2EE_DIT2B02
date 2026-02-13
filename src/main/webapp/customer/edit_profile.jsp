@@ -213,8 +213,9 @@
             <section class="card-section bg-white border border-stone-mid mb-6 stagger-3">
                 <div class="px-6 py-5 border-b border-stone-mid">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-stone-mid flex items-center justify-center">
-                            <span class="font-serif text-xl text-ink"><%= u.getName().substring(0, 1).toUpperCase() %></span>
+                        <div id="profileAvatarContainer" class="w-16 h-16 rounded-full overflow-hidden bg-stone-mid flex items-center justify-center flex-shrink-0">
+                            <img id="profileAvatarImg" src="<%= (u.getProfileImagePath() != null && !u.getProfileImagePath().trim().isEmpty()) ? (u.getProfileImagePath().startsWith("http") ? u.getProfileImagePath() : request.getContextPath() + "/" + u.getProfileImagePath()) : "" %>" alt="Profile" class="w-full h-full object-cover" style="<%= (u.getProfileImagePath() == null || u.getProfileImagePath().trim().isEmpty()) ? "display:none;" : "" %>" onerror="this.style.display='none'; document.getElementById('profileAvatarFallback').style.display='flex';">
+                            <span id="profileAvatarFallback" class="font-serif text-2xl text-ink" style="<%= (u.getProfileImagePath() != null && !u.getProfileImagePath().trim().isEmpty()) ? "display:none;" : "" %>"><%= u.getName().substring(0, 1).toUpperCase() %></span>
                         </div>
                         <div>
                             <h2 class="font-serif text-xl font-medium text-ink"><%= u.getName() %></h2>
@@ -225,6 +226,17 @@
 
                 <form method="post" action="<%= request.getContextPath() %>/customersServlet" class="p-6 space-y-6">
                     <input type="hidden" name="action" value="update" />
+                    <input type="hidden" name="profile_image_path" id="profile_image_path" value="<%= u.getProfileImagePath() != null ? u.getProfileImagePath() : "" %>" />
+
+                    <!-- Profile Photo Upload -->
+                    <div>
+                        <label class="block text-xs uppercase tracking-wide text-ink-muted mb-2">Profile Photo</label>
+                        <div class="flex gap-3 items-center">
+                            <input type="file" id="profile_image_file" accept="image/*" class="flex-1 text-sm file:mr-3 file:py-2 file:px-4 file:rounded-none file:border-0 file:bg-stone-mid file:text-ink hover:file:bg-stone-deep" />
+                            <button type="button" id="uploadProfileImageBtn" class="px-4 py-2 bg-copper text-white text-xs hover:bg-copper-light transition-colors whitespace-nowrap">Upload Photo</button>
+                        </div>
+                        <p id="profile_upload_status" class="text-xs mt-1 text-ink-muted"></p>
+                    </div>
 
                     <!-- Name + Email -->
                     <div class="grid md:grid-cols-2 gap-5">
@@ -541,6 +553,56 @@
                 dropdownList.style.display = "none";
             }
         });
+
+        /* Profile image upload */
+        var uploadProfileBtn = document.getElementById("uploadProfileImageBtn");
+        var profileFileInput = document.getElementById("profile_image_file");
+        var profilePathInput = document.getElementById("profile_image_path");
+        var profileStatus = document.getElementById("profile_upload_status");
+        var profileAvatarImg = document.getElementById("profileAvatarImg");
+        var profileAvatarFallback = document.getElementById("profileAvatarFallback");
+
+        if (uploadProfileBtn && profileFileInput) {
+            uploadProfileBtn.addEventListener("click", async function() {
+                if (!profileFileInput.files || !profileFileInput.files[0]) {
+                    profileStatus.textContent = "Please select an image file";
+                    profileStatus.className = "text-xs mt-1 text-red-600";
+                    return;
+                }
+                var file = profileFileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                formData.append("type", "caregiver");
+
+                profileStatus.textContent = "Uploading...";
+                profileStatus.className = "text-xs mt-1 text-copper";
+
+                try {
+                    var response = await fetch("http://localhost:8081/api/admin/upload/image", {
+                        method: "POST",
+                        body: formData
+                    });
+                    var data = await response.json();
+
+                    if (data.success && data.data) {
+                        profilePathInput.value = data.data;
+                        profileAvatarImg.src = data.data;
+                        profileAvatarImg.style.display = "block";
+                        profileAvatarFallback.style.display = "none";
+                        profileStatus.textContent = "Photo uploaded. Click Save Changes to update.";
+                        profileStatus.className = "text-xs mt-1 text-green-600";
+                        profileFileInput.value = "";
+                    } else {
+                        profileStatus.textContent = "Upload failed: " + (data.message || "Unknown error");
+                        profileStatus.className = "text-xs mt-1 text-red-600";
+                    }
+                } catch (err) {
+                    console.error(err);
+                    profileStatus.textContent = "Upload failed. Is the backend API running at http://localhost:8081?";
+                    profileStatus.className = "text-xs mt-1 text-red-600";
+                }
+            });
+        }
     });
     </script>
 </body>

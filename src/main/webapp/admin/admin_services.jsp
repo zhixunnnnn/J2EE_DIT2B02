@@ -371,7 +371,7 @@
                             <label class="block text-xs text-ink-muted mb-2">Or upload a new image:</label>
                             <div class="flex gap-2">
                                 <input type="file" id="add_image_file" accept="image/*" class="flex-1 text-sm file:mr-3 file:py-2 file:px-4 file:rounded-none file:border-0 file:bg-stone-mid file:text-ink hover:file:bg-stone-deep" />
-                                <button type="button" onclick="handleImageUpload('add')" class="px-4 py-2 bg-copper text-white text-xs hover:bg-copper-light transition-colors">
+                                <button type="button" id="add_upload_btn" class="px-4 py-2 bg-copper text-white text-xs hover:bg-copper-light transition-colors">
                                     Upload
                                 </button>
                             </div>
@@ -446,12 +446,12 @@
 
                     <div>
                         <label class="block text-xs uppercase tracking-wide text-ink-muted mb-2">Image path</label>
-                        <input type="text" name="image_path" id="edit_image" class="form-input" />
+                        <input type="text" name="image_path" id="edit_image_path" class="form-input" />
                         <div class="mt-2">
                             <label class="block text-xs text-ink-muted mb-2">Or upload a new image:</label>
                             <div class="flex gap-2">
                                 <input type="file" id="edit_image_file" accept="image/*" class="flex-1 text-sm file:mr-3 file:py-2 file:px-4 file:rounded-none file:border-0 file:bg-stone-mid file:text-ink hover:file:bg-stone-deep" />
-                                <button type="button" onclick="handleImageUpload('edit')" class="px-4 py-2 bg-copper text-white text-xs hover:bg-copper-light transition-colors">
+                                <button type="button" id="edit_upload_btn" class="px-4 py-2 bg-copper text-white text-xs hover:bg-copper-light transition-colors">
                                     Upload
                                 </button>
                             </div>
@@ -567,7 +567,7 @@
         const editCategory = document.getElementById("edit_category_id");
         const editPrice = document.getElementById("edit_price");
         const editDuration = document.getElementById("edit_duration");
-        const editImage = document.getElementById("edit_image");
+        const editImage = document.getElementById("edit_image_path");
         const editDescription = document.getElementById("edit_description");
 
         function openEditModalForRow(row) {
@@ -645,47 +645,76 @@
         });
 
         /* ========== IMAGE UPLOAD ========== */
+        const API_BASE = 'http://localhost:8081/api';
+        const UPLOAD_URL = API_BASE + '/admin/upload/image';
+
+        function setStatus(statusEl, msg, isError) {
+            if (!statusEl) return;
+            statusEl.textContent = msg;
+            statusEl.className = 'text-xs mt-1 ' + (isError ? 'text-red-600' : 'text-green-600');
+        }
+
+        function setStatusPending(statusEl, msg) {
+            if (!statusEl) return;
+            statusEl.textContent = msg;
+            statusEl.className = 'text-xs mt-1 text-copper';
+        }
+
         async function handleImageUpload(formType) {
             const fileInput = document.getElementById(formType + '_image_file');
             const statusEl = document.getElementById(formType + '_upload_status');
-            const pathInput = document.getElementById(formType + '_image_path');
-            
-            if (!fileInput.files || !fileInput.files[0]) {
-                statusEl.textContent = 'Please select an image file';
-                statusEl.className = 'text-xs mt-1 text-red-600';
+            const pathInput = document.getElementById(formType + '_image_path') || document.getElementById(formType + '_image');
+
+            if (!fileInput || !pathInput || !statusEl) {
+                console.error('[Upload] Missing elements:', { formType, fileInput: !!fileInput, pathInput: !!pathInput, statusEl: !!statusEl });
+                if (statusEl) setStatus(statusEl, 'Error: Upload UI elements not found.', true);
                 return;
             }
-            
+            if (!fileInput.files || !fileInput.files[0]) {
+                setStatus(statusEl, 'Please select an image file first.', true);
+                return;
+            }
+
             const file = fileInput.files[0];
+            setStatusPending(statusEl, 'Uploading...');
+
             const formData = new FormData();
             formData.append('file', file);
-            
-            statusEl.textContent = 'Uploading...';
-            statusEl.className = 'text-xs mt-1 text-copper';
-            
+            formData.append('type', 'service');
+
             try {
-                const response = await fetch('http://localhost:8081/api/admin/upload/image', {
+                const response = await fetch(UPLOAD_URL, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    mode: 'cors'
                 });
-                
-                const data = await response.json();
-                
-                if (data.success) {
+
+                const text = await response.text();
+                let data = {};
+                try {
+                    data = text ? JSON.parse(text) : {};
+                } catch (e) {
+                    setStatus(statusEl, 'Invalid server response (status ' + response.status + ')', true);
+                    console.error('[Upload] Parse error:', response.status, text);
+                    return;
+                }
+
+                if (response.ok && data.success && data.data) {
                     pathInput.value = data.data;
-                    statusEl.textContent = '✓ Upload successful';
-                    statusEl.className = 'text-xs mt-1 text-green-600';
+                    pathInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    setStatus(statusEl, 'Upload successful. Click "Save service" to save.', false);
                     fileInput.value = '';
                 } else {
-                    statusEl.textContent = 'Upload failed: ' + data.message;
-                    statusEl.className = 'text-xs mt-1 text-red-600';
+                    setStatus(statusEl, 'Upload failed: ' + (data.message || 'Unknown error'), true);
                 }
             } catch (error) {
-                console.error('Upload error:', error);
-                statusEl.textContent = 'Upload failed. Please try again.';
-                statusEl.className = 'text-xs mt-1 text-red-600';
+                console.error('[Upload] Error:', error);
+                setStatus(statusEl, 'Upload failed: ' + (error.message || 'Network error. Is backend running on port 8081?'), true);
             }
         }
+
+        document.getElementById('add_upload_btn')?.addEventListener('click', () => handleImageUpload('add'));
+        document.getElementById('edit_upload_btn')?.addEventListener('click', () => handleImageUpload('edit'));
     });
     </script>
 </body>

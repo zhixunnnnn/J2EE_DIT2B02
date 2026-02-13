@@ -55,6 +55,7 @@ public class AdminServiceEditServlet extends HttpServlet {
 			double price = Double.parseDouble(request.getParameter("price"));
 			int duration = Integer.parseInt(request.getParameter("duration_min"));
 			String imagePath = request.getParameter("image_path");
+			System.out.println("[AdminServiceEdit] image_path from form: " + (imagePath != null ? "'" + imagePath + "'" : "null"));
 
 			// Build service object
 			Service service = new Service(serviceId, categoryId, name, description, price, duration, imagePath);

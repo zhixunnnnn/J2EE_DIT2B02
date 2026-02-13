@@ -197,12 +197,15 @@
     return div.innerHTML;
   }
 
-  function sanitizeImagePath(img) {
+  function getImageSrc(img, ctx) {
     if (!img || img.trim() === '') {
-      return '/images/default-service.png';
+      return ctx + '/images/default-service.png';
+    }
+    if (img.startsWith('http://') || img.startsWith('https://')) {
+      return img;
     }
     var sanitized = img.replace(/[^a-zA-Z0-9\/.\-_]/g, '');
-    return sanitized.startsWith('/') ? sanitized : '/' + sanitized;
+    return ctx + (sanitized.startsWith('/') ? sanitized : '/' + sanitized);
   }
 
   function loadServices() {
@@ -229,8 +232,7 @@
       }
       
       container.innerHTML = displayServices.map(function(service, i) {
-        var imgPath = sanitizeImagePath(service.imagePath || service.image_path);
-        var imgSrc = ctx + imgPath;
+        var imgSrc = getImageSrc(service.imagePath || service.image_path, ctx);
         var serviceName = escapeHtml(service.serviceName || service.service_name || 'Service');
         var description = escapeHtml(service.description || '');
         var price = service.price ? service.price.toFixed(0) : '—';

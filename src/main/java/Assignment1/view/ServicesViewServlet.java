@@ -14,6 +14,7 @@ public class ServicesViewServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.getRequestDispatcher("/public/services.jsp").forward(request, response);
+		// Always fetch fresh service list from API (avoids stale session after adding/editing services)
+		response.sendRedirect(request.getContextPath() + "/serviceServlet");
 	}
 }
